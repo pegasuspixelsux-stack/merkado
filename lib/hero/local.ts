@@ -1,6 +1,6 @@
 import type { HeroConfig, Slide } from "@/types/hero";
 import type { HeroBackend } from "./backend";
-import { DEFAULT_HERO_CONFIG, MAX_SLIDES } from "./defaults";
+import { DEFAULT_HERO_CONFIG, MAX_COLOR_OPACITY, MAX_DARKNESS, MAX_SLIDES } from "./defaults";
 
 const KEY = "merkado:hero-config:v1";
 const listeners = new Set<() => void>();
@@ -16,6 +16,9 @@ function sanitizeSlide(v: unknown): Slide | null {
     ...(typeof o.altText === "string" && o.altText ? { altText: o.altText } : {}),
   };
 }
+
+const clampNumber = (v: unknown, max: number, fallback: number) =>
+  typeof v === "number" && Number.isFinite(v) ? Math.min(max, Math.max(0, Math.round(v))) : fallback;
 
 // Anything missing or malformed falls back to the default for that field.
 function sanitize(raw: unknown): HeroConfig {
@@ -42,6 +45,11 @@ function sanitize(raw: unknown): HeroConfig {
     autoplayIntervalMs:
       typeof interval === "number" && interval >= 2000 && interval <= 30000 ? interval : d.autoplayIntervalMs,
     enableAutoplay: typeof o.enableAutoplay === "boolean" ? o.enableAutoplay : d.enableAutoplay,
+    showNavTitle: typeof o.showNavTitle === "boolean" ? o.showNavTitle : d.showNavTitle,
+    overlayDarkness: clampNumber(o.overlayDarkness, MAX_DARKNESS, d.overlayDarkness),
+    overlayColor:
+      typeof o.overlayColor === "string" && /^#[0-9a-fA-F]{6}$/.test(o.overlayColor) ? o.overlayColor : d.overlayColor,
+    overlayColorOpacity: clampNumber(o.overlayColorOpacity, MAX_COLOR_OPACITY, d.overlayColorOpacity),
   };
 }
 

@@ -81,7 +81,18 @@ const arrowBtn =
 // hero's own width (cqw units) and always fits. On wide screens the height is capped at one
 // viewport. The nav floats transparent over its top edge.
 export default function HeroSlideshow({ config }: { config: HeroConfig }) {
-  const { desktopSlides, mobileSlides, showTextOverlay, heading, subtext, enableAutoplay, autoplayIntervalMs } = config;
+  const {
+    desktopSlides,
+    mobileSlides,
+    showTextOverlay,
+    heading,
+    subtext,
+    enableAutoplay,
+    autoplayIntervalMs,
+    overlayDarkness,
+    overlayColor,
+    overlayColorOpacity,
+  } = config;
 
   // Phones use the mobile set and wider screens the desktop set. If the chosen set is empty, the
   // other one fills in so the hero is never bare just because one side was left unset.
@@ -139,6 +150,22 @@ export default function HeroSlideshow({ config }: { config: HeroConfig }) {
           />
         ))}
       </div>
+
+      {/* Colour and darkness overlays, set in the admin. Colour sits under the darkness layer. */}
+      {overlayColorOpacity > 0 && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 transition-opacity duration-300 motion-reduce:transition-none"
+          style={{ backgroundColor: overlayColor, opacity: overlayColorOpacity / 100 }}
+        />
+      )}
+      {overlayDarkness > 0 && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-black transition-opacity duration-300 motion-reduce:transition-none"
+          style={{ opacity: overlayDarkness / 100 }}
+        />
+      )}
 
       {/* Scrim. Darker and even when text sits on top. Photo-only heroes get just a light touch for the nav and dots, so artwork keeps its colours. */}
       <div

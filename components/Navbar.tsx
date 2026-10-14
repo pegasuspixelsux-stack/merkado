@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useHeroConfig } from "@/hooks/useHeroConfig";
 import { Menu, Search, X } from "lucide-react";
 
 const links = [
@@ -19,6 +20,8 @@ const field =
 type Panel = "menu" | "search" | null;
 
 export default function Navbar() {
+  // The site name in the bar can be switched off from the admin Hero tab.
+  const { config } = useHeroConfig();
   const urlQuery = useSearchParams().get("q") ?? "";
   const [panel, setPanel] = useState<Panel>(null);
 
@@ -99,9 +102,9 @@ export default function Navbar() {
       {/* Mobile: burger left, brand centered, search right. Desktop: brand, links, search. */}
       <nav
         aria-label="Primary"
-        className={`${solid ? "" : "nav-top "}mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 md:flex md:h-14 md:justify-between`}
+        className={`${solid ? "" : "nav-top "}mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 md:h-14`}
       >
-        <div className="flex justify-start md:hidden">
+        <div className="col-start-1 row-start-1 flex justify-start md:hidden">
           <button
             type="button"
             onClick={() => setPanel((p) => (p === "menu" ? null : "menu"))}
@@ -114,11 +117,16 @@ export default function Navbar() {
           </button>
         </div>
 
-        <Link href="/" className="text-lg font-bold tracking-tight text-walnut dark:text-white">
-          Merkado
-        </Link>
+        {config.showNavTitle && (
+          <Link
+            href="/"
+            className="col-start-2 row-start-1 justify-self-center text-lg font-bold tracking-tight text-walnut md:col-start-1 md:justify-self-start dark:text-white"
+          >
+            Merkado
+          </Link>
+        )}
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="row-start-1 hidden items-center gap-8 md:col-start-2 md:flex">
           {links.map((l) => (
             <li key={l.href}>
               <Link
@@ -131,7 +139,7 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <div className="flex justify-end">
+        <div className="col-start-3 row-start-1 flex justify-end">
           <div className="hidden w-64 md:block">{searchField(false)}</div>
           <button
             type="button"

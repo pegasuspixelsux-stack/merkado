@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { ArrowDown, ArrowUp, ImagePlus, Link2, Trash2 } from "lucide-react";
 import type { HeroConfig, Slide } from "@/types/hero";
 import { heroBackend } from "@/lib/hero";
-import { INTERVAL_OPTIONS_MS, MAX_SLIDES } from "@/lib/hero/defaults";
+import { INTERVAL_OPTIONS_MS, MAX_COLOR_OPACITY, MAX_DARKNESS, MAX_SLIDES } from "@/lib/hero/defaults";
 import { fileToDataUrl } from "@/lib/hero/image";
 import { useHeroConfig } from "@/hooks/useHeroConfig";
 import PastaImage from "@/components/catalog/PastaImage";
@@ -59,6 +59,61 @@ function probeImage(url: string): Promise<boolean> {
     };
     img.src = url;
   });
+}
+
+// Keeps a local draft so controls feel instant, then saves after a short pause (and on release).
+// Re-syncs if the saved value changes from elsewhere.
+function useDraft<T>(value: T, onSave: (next: T) => void, delay = 200) {
+  const [draft, setDraft] = useState(value);
+  const [seen, setSeen] = useState(value);
+  if (value !== seen) {
+    setSeen(value);
+    setDraft(value);
+  }
+
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+  }, []);
+
+  function change(next: T) {
+    setDraft(next);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      timer.current = null;
+      onSave(next);
+    }, delay);
+  }
+  function flush() {
+    if (!timer.current) return;
+    clearTimeout(timer.current);
+    timer.current = null;
+    onSave(draft);
+  }
+  // Sets and saves a value immediately, without waiting for the pause.
+  function saveNow(next: T) {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = null;
+    setDraft(next);
+    onSave(next);
+  }
+  return { draft, change, flush, saveNow };
+}
+
+// Shows the first slide with the overlay applied, so the effect is visible without leaving the page.
+function OverlayPreview({ url, darkness, color, colorOpacity }: {
+  url: string;
+  darkness: number;
+  color: string;
+  colorOpacity: number;
+}) {
+  return (
+    <div className="relative aspect-[16/7] w-full overflow-hidden rounded-xl bg-zinc-900" role="img" aria-label="Preview of the hero with the overlay applied">
+      <PastaImage key={url} url={url} alt="" className="absolute inset-0 h-full w-full" />
+      <div aria-hidden="true" className="absolute inset-0" style={{ backgroundColor: color, opacity: colorOpacity / 100 }} />
+      <div aria-hidden="true" className="absolute inset-0 bg-black" style={{ opacity: darkness / 100 }} />
+    </div>
+  );
 }
 
 // A text field that saves as you type (after a short pause) and immediately when it loses focus.
@@ -141,6 +196,11 @@ export default function HeroSettings() {
   const [urlError, setUrlError] = useState("");
   const [removing, setRemoving] = useState<Slide | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Overlay controls. Each keeps a draft so dragging is smooth and storage is written once.
+  const darkness = useDraft(config.overlayDarkness, (v) => void run({ overlayDarkness: v }));
+  const tint = useDraft(config.overlayColor, (v) => void run({ overlayColor: v }));
+  const tintStrength = useDraft(config.overlayColorOpacity, (v) => void run({ overlayColorOpacity: v }));
 
   async function run(patch: Partial<HeroConfig>) {
     setError("");
@@ -246,6 +306,25 @@ export default function HeroSettings() {
       )}
 
       <div className="mt-8 space-y-6">
+        {/* Top navigation */}
+        <section className={card} aria-labelledby={`${uid}-nav`}>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 id={`${uid}-nav`} className="text-base font-semibold text-walnut dark:text-white">
+                Site name in the top bar
+              </h2>
+              <p className="mt-1 text-sm text-muted dark:text-zinc-400">
+                Show the store name in the navigation bar. Turn it off if your hero artwork already carries the name.
+              </p>
+            </div>
+            <Switch
+              checked={config.showNavTitle}
+              onChange={(next) => void run({ showNavTitle: next })}
+              label="Show the site name in the top navigation bar"
+            />
+          </div>
+        </section>
+
         {/* Text overlay */}
         <section className={card} aria-labelledby={`${uid}-text`}>
           <div className="flex items-start justify-between gap-4">
@@ -398,6 +477,91 @@ export default function HeroSettings() {
                 </li>
               ))}
             </ol>
+          )}
+        </section>
+
+        {/* Overlay: darkness and colour */}
+        <section className={card} aria-labelledby={`${uid}-overlay`}>
+          <h2 id={`${uid}-overlay`} className="text-base font-semibold text-walnut dark:text-white">Darkness and colour overlay</h2>
+          <p className="mt-1 text-sm text-muted dark:text-zinc-400">
+            Darken the slides, tint them with a colour, or both. Useful for readable text or to match your brand.
+          </p>
+
+          <div className="mt-5">
+            <OverlayPreview
+              url={(config.desktopSlides[0] ?? config.mobileSlides[0])?.imageUrl ?? ""}
+              darkness={darkness.draft}
+              color={tint.draft}
+              colorOpacity={tintStrength.draft}
+            />
+          </div>
+
+          <div className="mt-6 grid gap-6 sm:grid-cols-2">
+            <div>
+              <label htmlFor={`${uid}-dark`} className={`${label} flex justify-between`}>
+                <span>Darkness</span>
+                <span className="font-normal tabular-nums text-muted dark:text-zinc-400">{darkness.draft}%</span>
+              </label>
+              <input
+                id={`${uid}-dark`}
+                type="range"
+                min={0}
+                max={MAX_DARKNESS}
+                step={5}
+                value={darkness.draft}
+                onChange={(e) => darkness.change(Number(e.target.value))}
+                onPointerUp={darkness.flush}
+                onBlur={darkness.flush}
+                aria-valuetext={`${darkness.draft} percent`}
+                className="h-2 w-full cursor-pointer accent-chestnut dark:accent-white"
+              />
+            </div>
+
+            <div>
+              <p className={label}>Colour overlay</p>
+              <div className="flex items-center gap-3">
+                <label htmlFor={`${uid}-tint`} className="sr-only">Overlay colour</label>
+                <input
+                  id={`${uid}-tint`}
+                  type="color"
+                  value={tint.draft}
+                  onChange={(e) => tint.change(e.target.value)}
+                  onBlur={tint.flush}
+                  className="h-10 w-14 shrink-0 cursor-pointer rounded-lg border border-walnut/15 bg-cream p-1 dark:border-white/10 dark:bg-zinc-950"
+                />
+                <span className="text-sm tabular-nums text-muted dark:text-zinc-400">{tint.draft.toUpperCase()}</span>
+              </div>
+              <label htmlFor={`${uid}-tint-strength`} className="mt-4 flex justify-between text-sm text-walnut dark:text-zinc-200">
+                <span>Strength</span>
+                <span className="tabular-nums text-muted dark:text-zinc-400">{tintStrength.draft}%</span>
+              </label>
+              <input
+                id={`${uid}-tint-strength`}
+                type="range"
+                min={0}
+                max={MAX_COLOR_OPACITY}
+                step={5}
+                value={tintStrength.draft}
+                onChange={(e) => tintStrength.change(Number(e.target.value))}
+                onPointerUp={tintStrength.flush}
+                onBlur={tintStrength.flush}
+                aria-valuetext={`${tintStrength.draft} percent`}
+                className="mt-1.5 h-2 w-full cursor-pointer accent-chestnut dark:accent-white"
+              />
+            </div>
+          </div>
+
+          {(darkness.draft > 0 || tintStrength.draft > 0) && (
+            <button
+              type="button"
+              onClick={() => {
+                darkness.saveNow(0);
+                tintStrength.saveNow(0);
+              }}
+              className={`${ghostBtn} mt-5`}
+            >
+              Remove overlay
+            </button>
           )}
         </section>
 

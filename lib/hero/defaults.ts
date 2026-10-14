@@ -23,4 +23,11 @@ export const DEFAULT_HERO_CONFIG: HeroConfig = {
   ],
   autoplayIntervalMs: 5000,
   enableAutoplay: true,
+  showNavTitle: true,
+  overlayDarkness: 0,
+  overlayColor: "#6b3e22",
+  overlayColorOpacity: 0,
 };
+
+export const MAX_DARKNESS = 90;
+export const MAX_COLOR_OPACITY = 80;
