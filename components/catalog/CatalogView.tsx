@@ -1,15 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useMemo, useState, type ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import { MessageCircle, SearchX, X } from "lucide-react";
 import type { PastaCategory } from "@/types/pasta";
 import { CATEGORIES } from "@/lib/pasta/categories";
 import { formatPrice, normalize, whatsappLink } from "@/lib/format";
 import { usePastaInventory } from "@/hooks/usePastaInventory";
-import ThemeToggle from "@/components/ThemeToggle";
-import Hero from "./Hero";
+import HeroSlideshow from "@/components/HeroSlideshow";
+import { useHeroConfig } from "@/hooks/useHeroConfig";
 import PastaCard, { MAX_QUANTITY } from "./PastaCard";
 
 type Filter = PastaCategory | "all";
@@ -22,8 +21,10 @@ const pillOn =
   "border-chestnut bg-chestnut text-white dark:border-white dark:bg-white dark:text-black";
 
 // The search text lives in the URL (?q=), written by the top nav search. This view only reads it.
-export default function CatalogView() {
+// `outro` is rendered below the grid, above the footer (the collapsible About section).
+export default function CatalogView({ outro }: { outro?: ReactNode }) {
   const { items, hydrated } = usePastaInventory();
+  const { config: heroConfig } = useHeroConfig();
   const query = useSearchParams().get("q") ?? "";
   const [category, setCategory] = useState<Filter>("all");
   // How many of each item the visitor wants, by item id. Kept in memory only.
@@ -66,7 +67,7 @@ export default function CatalogView() {
   return (
     <>
       {/* Full-bleed: sits outside the narrow content column, flush under the nav. */}
-      <Hero />
+      <HeroSlideshow config={heroConfig} />
 
       <main id="catalog" className="mx-auto w-full max-w-4xl flex-1 px-6 pb-10 pt-8">
         {/* Visually hidden: announces result counts to screen readers. */}
@@ -144,6 +145,8 @@ export default function CatalogView() {
             ))}
           </ul>
         )}
+
+        {outro}
       </main>
 
       {/* Order bar: appears once anything has a quantity and sends the whole order in one message. */}
@@ -174,20 +177,6 @@ export default function CatalogView() {
         </div>
       )}
 
-      <footer className="mx-auto mt-10 flex w-full max-w-4xl flex-col items-start justify-between gap-4 border-t border-walnut/15 px-6 py-8 sm:flex-row sm:items-center dark:border-white/10">
-        <p className="text-xs text-muted dark:text-zinc-500">
-          &copy; 2026 Merkado. Orders are arranged by WhatsApp.
-        </p>
-        <div className="flex items-center gap-5">
-          <Link
-            href="/admin/login"
-            className="text-xs text-muted transition-colors hover:text-walnut dark:text-zinc-500 dark:hover:text-white"
-          >
-            Admin
-          </Link>
-          <ThemeToggle />
-        </div>
-      </footer>
     </>
   );
 }

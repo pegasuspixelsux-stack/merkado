@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import Navbar from "@/components/Navbar";
+import AboutUsSection from "@/components/AboutUsSection";
 import CatalogView from "@/components/catalog/CatalogView";
+import Footer from "@/components/Footer";
 
 // Both the nav and the catalog read ?q= from the URL, which needs a Suspense boundary.
 // The nav is fixed over the hero, so its fallback is an empty fixed bar of the same height.
@@ -22,8 +24,9 @@ export default function Home() {
         <Navbar />
       </Suspense>
       <Suspense fallback={null}>
-        <CatalogView />
+        <CatalogView outro={<AboutUsSection />} />
       </Suspense>
+      <Footer />
     </>
   );
 }

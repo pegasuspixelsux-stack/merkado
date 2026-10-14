@@ -11,12 +11,14 @@ import { signOut, useSession } from "@/lib/auth";
 import { usePastaInventory } from "@/hooks/usePastaInventory";
 import PastaImage from "@/components/catalog/PastaImage";
 import ThemeToggle from "@/components/ThemeToggle";
+import HeroSettings from "./HeroSettings";
 import ItemForm from "./ItemForm";
 import Modal from "./Modal";
 import Switch from "./Switch";
 
 // "new" opens the add form, an item opens the edit form, null keeps the dialog closed.
 type Editing = PastaItem | "new" | null;
+type Tab = "inventory" | "hero";
 
 const ghostBtn =
   "inline-flex items-center gap-1.5 rounded-full border border-walnut/15 px-4 py-2 text-sm font-medium text-walnut transition-colors hover:border-walnut/30 hover:text-walnut dark:border-white/10 dark:text-zinc-300 dark:hover:border-white/25 dark:hover:text-white";
@@ -29,6 +31,7 @@ export default function Dashboard() {
   const { items, hydrated, create, update, remove } = usePastaInventory();
   const [editing, setEditing] = useState<Editing>(null);
   const [deleting, setDeleting] = useState<PastaItem | null>(null);
+  const [tab, setTab] = useState<Tab>("inventory");
 
   useEffect(() => {
     if (session.status === "signed-out") router.replace("/admin/login");
@@ -88,6 +91,36 @@ export default function Dashboard() {
       </header>
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
+        <div
+          role="tablist"
+          aria-label="Dashboard sections"
+          className="mb-8 inline-flex rounded-full border border-walnut/15 bg-walnut/[0.05] p-0.5 dark:border-white/10 dark:bg-white/5"
+        >
+          {(["inventory", "hero"] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              role="tab"
+              id={`tab-${t}`}
+              aria-selected={tab === t}
+              aria-controls="dashboard-panel"
+              onClick={() => setTab(t)}
+              className={`rounded-full px-5 py-1.5 text-sm font-medium transition-colors ${
+                tab === t
+                  ? "bg-cream text-walnut shadow-sm dark:bg-white/10 dark:text-white dark:shadow-none"
+                  : "text-muted hover:text-walnut dark:text-zinc-400 dark:hover:text-white"
+              }`}
+            >
+              {t === "inventory" ? "Inventory" : "Hero"}
+            </button>
+          ))}
+        </div>
+
+        <div id="dashboard-panel" role="tabpanel" aria-labelledby={`tab-${tab}`}>
+        {tab === "hero" ? (
+          <HeroSettings />
+        ) : (
+        <>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold tracking-tight text-walnut dark:text-white">
@@ -175,6 +208,9 @@ export default function Dashboard() {
             ))}
           </ul>
         )}
+        </>
+        )}
+        </div>
       </main>
 
       <footer className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-8">
