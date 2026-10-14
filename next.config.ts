@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
     agentFeedback: true,
   },
   cacheComponents: true,
+  // The catalog is the front page now. Keeps old /catalog links (and ?q=) working.
+  async redirects() {
+    return [{ source: "/catalog", destination: "/", permanent: false }];
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

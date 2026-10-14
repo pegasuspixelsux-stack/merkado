@@ -1,26 +1,142 @@
 @import "tailwindcss";
 
+/* Class-based dark mode so the footer switch can override the system setting. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #ecdfc8; /* cedar */
+  --foreground: #18181b; /* zinc-900 */
+}
+
+.dark {
+  --background: #09090b; /* zinc-950 */
+  --foreground: #f4f4f5; /* zinc-100 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  /* Warm Coastal Cedar: cedar tan page, chestnut frame, walnut text, cream trim. */
+  --color-chestnut: #6b3e22;
+  --color-chestnut-hover: #7f4b2b;
+  --color-walnut: #3d2616;
+  --color-muted: #6b5544;
+  --color-cream: #fbf6ea;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* Faint wood grain on the light theme only. Fixed, behind content, never intercepts input. */
+html:not(.dark) body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(90deg, rgb(107 62 34 / 0.035) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(90deg, rgb(107 62 34 / 0.02) 0 2px, transparent 2px 23px);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background: #6b3e22;
+  color: #fff;
+}
+
+.dark ::selection {
+  background: rgb(255 255 255 / 0.9);
+  color: #09090b;
+}
+
+:focus-visible {
+  outline: 2px solid #6b3e22;
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.dark :focus-visible {
+  outline-color: #fff;
+}
+
+/* Entrance and reveal: transform and opacity only, and only when motion is allowed. */
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--d, 0ms);
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Cards reveal as they scroll into view, driven by the browser's view timeline. */
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
+/* Swap frosted glass for solid fills when the user asks for less transparency. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background-color: #f4ecdb !important;
+  }
+  .dark .glass {
+    background-color: #18181b !important;
+  }
+}
+
+/* While the nav floats transparent over the hero photo, show it in white (both themes). Scoped
+   to the nav bar row only; dropdown panels keep their own themed colours. */
+.nav-top,
+.nav-top a,
+.nav-top button,
+.nav-top svg {
+  color: #fff !important;
+}
+.nav-top a,
+.nav-top button {
+  text-shadow: 0 1px 10px rgb(0 0 0 / 0.35);
+}
+.nav-top a:hover {
+  opacity: 0.8;
+}
+.nav-top button:hover {
+  background: rgb(255 255 255 / 0.15) !important;
+}
+.nav-top input[type="search"] {
+  color: #fff !important;
+  background: rgb(255 255 255 / 0.15) !important;
+  border-color: rgb(255 255 255 / 0.35) !important;
+}
+.nav-top input[type="search"]::placeholder {
+  color: rgb(255 255 255 / 0.75) !important;
 }
