@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { NewPastaItem, PastaCategory, PastaItem } from "@/types/pasta";
-import { CATEGORIES } from "@/lib/pasta/categories";
+import type { NewPastaItem, PastaItem } from "@/types/pasta";
+import { useCategories } from "@/hooks/useCategories";
 import Switch from "./Switch";
 
 const input =
@@ -32,7 +32,11 @@ export default function ItemForm({
   onCancel: () => void;
 }) {
   const [title, setTitle] = useState(item?.title ?? "");
-  const [category, setCategory] = useState<PastaCategory>(item?.category ?? "pasta");
+  const { categories } = useCategories();
+  // A product whose category was deleted starts as Uncategorized; a new product starts in the first category.
+  const [category, setCategory] = useState<string>(() =>
+    item ? (categories.some((c) => c.id === item.category) ? item.category : "") : (categories[0]?.id ?? ""),
+  );
   const [description, setDescription] = useState(item?.description ?? "");
   const [price, setPrice] = useState(item ? String(item.price) : "");
   const [unit, setUnit] = useState(item?.unit ?? "500g");
@@ -91,11 +95,12 @@ export default function ItemForm({
           <select
             id="f-category"
             value={category}
-            onChange={(e) => setCategory(e.target.value as PastaCategory)}
+            onChange={(e) => setCategory(e.target.value)}
             className={input}
           >
-            {CATEGORIES.map((c) => (
-              <option key={c.id} value={c.id}>{c.label}</option>
+            <option value="">Uncategorized</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
         </div>

@@ -3,15 +3,15 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import { MessageCircle, SearchX, X } from "lucide-react";
-import type { PastaCategory } from "@/types/pasta";
-import { CATEGORIES } from "@/lib/pasta/categories";
+import CategoryIcon from "@/components/CategoryIcon";
+import { useCategories } from "@/hooks/useCategories";
 import { formatPrice, normalize, whatsappLink } from "@/lib/format";
 import { usePastaInventory } from "@/hooks/usePastaInventory";
 import HeroSlideshow from "@/components/HeroSlideshow";
 import { useHeroConfig } from "@/hooks/useHeroConfig";
 import PastaCard, { MAX_QUANTITY } from "./PastaCard";
 
-type Filter = PastaCategory | "all";
+type Filter = string; // a category id, or "all"
 
 const pill =
   "shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors";
@@ -26,7 +26,10 @@ export default function CatalogView({ outro }: { outro?: ReactNode }) {
   const { items, hydrated } = usePastaInventory();
   const { config: heroConfig } = useHeroConfig();
   const query = useSearchParams().get("q") ?? "";
-  const [category, setCategory] = useState<Filter>("all");
+  const { categories } = useCategories();
+  const [chosen, setCategory] = useState<Filter>("all");
+  // If the chosen category was deleted in the meantime, fall back to All instead of an empty grid.
+  const category = chosen === "all" || categories.some((c) => c.id === chosen) ? chosen : "all";
   // How many of each item the visitor wants, by item id. Kept in memory only.
   const [order, setOrder] = useState<Record<string, number>>({});
 
@@ -89,15 +92,16 @@ export default function CatalogView({ outro }: { outro?: ReactNode }) {
           >
             All
           </button>
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <button
               key={c.id}
               type="button"
               aria-pressed={category === c.id}
               onClick={() => setCategory(c.id)}
-              className={`${pill} ${category === c.id ? pillOn : pillOff}`}
+              className={`${pill} inline-flex items-center gap-1.5 ${category === c.id ? pillOn : pillOff}`}
             >
-              {c.label}
+              <CategoryIcon key={c.icon} icon={c.icon} className="h-4 w-4 rounded-full" />
+              {c.name}
             </button>
           ))}
         </div>

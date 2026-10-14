@@ -5,12 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, LogOut, Pencil, Plus, Trash2 } from "lucide-react";
 import type { NewPastaItem, PastaItem } from "@/types/pasta";
-import { categoryLabel } from "@/lib/pasta/categories";
 import { formatPrice } from "@/lib/format";
 import { signOut, useSession } from "@/lib/auth";
+import { useCategories } from "@/hooks/useCategories";
 import { usePastaInventory } from "@/hooks/usePastaInventory";
 import PastaImage from "@/components/catalog/PastaImage";
 import ThemeToggle from "@/components/ThemeToggle";
+import CategoryManager from "./CategoryManager";
 import HeroSettings from "./HeroSettings";
 import ItemForm from "./ItemForm";
 import Modal from "./Modal";
@@ -18,7 +19,12 @@ import Switch from "./Switch";
 
 // "new" opens the add form, an item opens the edit form, null keeps the dialog closed.
 type Editing = PastaItem | "new" | null;
-type Tab = "inventory" | "hero";
+type Tab = "inventory" | "categories" | "hero";
+const TABS: { id: Tab; label: string }[] = [
+  { id: "inventory", label: "Inventory" },
+  { id: "categories", label: "Categories" },
+  { id: "hero", label: "Hero" },
+];
 
 const ghostBtn =
   "inline-flex items-center gap-1.5 rounded-full border border-walnut/15 px-4 py-2 text-sm font-medium text-walnut transition-colors hover:border-walnut/30 hover:text-walnut dark:border-white/10 dark:text-zinc-300 dark:hover:border-white/25 dark:hover:text-white";
@@ -29,6 +35,7 @@ export default function Dashboard() {
   const router = useRouter();
   const session = useSession();
   const { items, hydrated, create, update, remove } = usePastaInventory();
+  const { nameOf } = useCategories();
   const [editing, setEditing] = useState<Editing>(null);
   const [deleting, setDeleting] = useState<PastaItem | null>(null);
   const [tab, setTab] = useState<Tab>("inventory");
@@ -96,7 +103,7 @@ export default function Dashboard() {
           aria-label="Dashboard sections"
           className="mb-8 inline-flex rounded-full border border-walnut/15 bg-walnut/[0.05] p-0.5 dark:border-white/10 dark:bg-white/5"
         >
-          {(["inventory", "hero"] as const).map((t) => (
+          {TABS.map(({ id: t, label }) => (
             <button
               key={t}
               type="button"
@@ -111,7 +118,7 @@ export default function Dashboard() {
                   : "text-muted hover:text-walnut dark:text-zinc-400 dark:hover:text-white"
               }`}
             >
-              {t === "inventory" ? "Inventory" : "Hero"}
+              {label}
             </button>
           ))}
         </div>
@@ -119,6 +126,8 @@ export default function Dashboard() {
         <div id="dashboard-panel" role="tabpanel" aria-labelledby={`tab-${tab}`}>
         {tab === "hero" ? (
           <HeroSettings />
+        ) : tab === "categories" ? (
+          <CategoryManager />
         ) : (
         <>
         <div className="flex flex-wrap items-end justify-between gap-4">
@@ -167,7 +176,7 @@ export default function Dashboard() {
                 <div className="min-w-0 flex-1 basis-48">
                   <p className="truncate font-medium text-walnut dark:text-white">{item.title}</p>
                   <p className="mt-0.5 text-sm text-muted dark:text-zinc-400">
-                    {categoryLabel(item.category)} · {formatPrice(item.price)} / {item.unit}
+                    {nameOf(item.category)} · {formatPrice(item.price)} / {item.unit}
                   </p>
                 </div>
 

@@ -1,10 +1,8 @@
 import type { PastaItem } from "@/types/pasta";
 import type { PastaBackend } from "./backend";
-import { CATEGORIES } from "./categories";
 import { SEED_ITEMS } from "./seed";
 
 const KEY = "merkado:pasta-inventory:v1";
-const categoryIds = new Set<string>(CATEGORIES.map((c) => c.id));
 
 const listeners = new Set<() => void>();
 let cache: PastaItem[] | null = null;
@@ -16,7 +14,6 @@ function isItem(v: unknown): v is PastaItem {
     typeof o.id === "string" &&
     typeof o.title === "string" &&
     typeof o.category === "string" &&
-    categoryIds.has(o.category) &&
     typeof o.description === "string" &&
     typeof o.price === "number" &&
     typeof o.unit === "string" &&
@@ -99,5 +96,10 @@ export const localBackend: PastaBackend = {
   },
   async remove(id) {
     commit(load().filter((i) => i.id !== id));
+  },
+  async clearCategory(categoryId) {
+    const items = load();
+    if (!items.some((i) => i.category === categoryId)) return;
+    commit(items.map((i) => (i.category === categoryId ? { ...i, category: "" } : i)));
   },
 };

@@ -16,4 +16,8 @@ export interface PastaBackend {
   create(data: NewPastaItem): Promise<PastaItem>;
   update(id: string, patch: Partial<NewPastaItem>): Promise<void>;
   remove(id: string): Promise<void>;
+
+  // Marks every product in a category as uncategorized ("") in one step. Used when a category
+  // is deleted, so no product is left pointing at something that no longer exists.
+  clearCategory(categoryId: string): Promise<void>;
 }

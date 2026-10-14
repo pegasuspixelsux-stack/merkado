@@ -1,9 +1,7 @@
-export type PastaCategory = "pasta" | "sauces" | "cheese";
-
 export interface PastaItem {
   id: string;
   title: string;
-  category: PastaCategory;
+  category: string; // a Category id, or "" for uncategorized
   description: string;
   price: number;
   unit: string; // e.g. "500g", "kg", "unit"
