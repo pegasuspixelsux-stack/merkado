@@ -79,7 +79,7 @@ const arrowBtn =
 // A full-width, square hero driven by HeroConfig. It crossfades between slides, optionally shows
 // the heading and supporting text over them, and is a size container, so the type scales with the
 // hero's own width (cqw units) and always fits. On wide screens the height is capped at one
-// viewport. The nav floats transparent over its top edge.
+// viewport minus the nav bar above it.
 export default function HeroSlideshow({ config }: { config: HeroConfig }) {
   const {
     desktopSlides,
@@ -128,7 +128,7 @@ export default function HeroSlideshow({ config }: { config: HeroConfig }) {
       onPointerLeave={(e) => e.pointerType === "mouse" && setEngaged(false)}
       onFocusCapture={() => setEngaged(true)}
       onBlurCapture={() => setEngaged(false)}
-      className="@container relative aspect-square max-h-[100dvh] w-full overflow-hidden bg-zinc-900"
+      className="@container relative aspect-square max-h-[calc(100dvh-4rem)] w-full md:max-h-[calc(100dvh-3.5rem)] overflow-hidden bg-zinc-900"
     >
       {/* With no slides this stays a quiet solid background. */}
       {count === 0 && (
@@ -167,13 +167,13 @@ export default function HeroSlideshow({ config }: { config: HeroConfig }) {
         />
       )}
 
-      {/* Scrim. Darker and even when text sits on top. Photo-only heroes get just a light touch for the nav and dots, so artwork keeps its colours. */}
+      {/* Scrim. Darker and even when text sits on top. Photo-only heroes get just a light touch for the dots, so artwork keeps its colours. */}
       <div
         aria-hidden="true"
         className={`absolute inset-0 ${
           showTextOverlay
             ? "bg-gradient-to-b from-black/55 via-black/45 to-black/65"
-            : "bg-gradient-to-b from-black/30 via-transparent to-black/15"
+            : "bg-gradient-to-b from-transparent via-transparent to-black/20"
         }`}
       />
 

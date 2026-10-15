@@ -5,12 +5,12 @@ import CatalogView from "@/components/catalog/CatalogView";
 import Footer from "@/components/Footer";
 
 // Both the nav and the catalog read ?q= from the URL, which needs a Suspense boundary.
-// The nav is fixed over the hero, so its fallback is an empty fixed bar of the same height.
+// The nav is a sticky bar above the hero, so its fallback is an empty bar of the same height.
 function NavFallback() {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-x-0 top-0 z-50 h-16 border-b border-transparent md:h-14"
+      className="sticky top-0 z-50 h-16 border-b border-transparent md:h-14"
     />
   );
 }

@@ -113,30 +113,3 @@ body {
     background-color: #18181b !important;
   }
 }
-
-/* While the nav floats transparent over the hero photo, show it in white (both themes). Scoped
-   to the nav bar row only; dropdown panels keep their own themed colours. */
-.nav-top,
-.nav-top a,
-.nav-top button,
-.nav-top svg {
-  color: #fff !important;
-}
-.nav-top a,
-.nav-top button {
-  text-shadow: 0 1px 10px rgb(0 0 0 / 0.35);
-}
-.nav-top a:hover {
-  opacity: 0.8;
-}
-.nav-top button:hover {
-  background: rgb(255 255 255 / 0.15) !important;
-}
-.nav-top input[type="search"] {
-  color: #fff !important;
-  background: rgb(255 255 255 / 0.15) !important;
-  border-color: rgb(255 255 255 / 0.35) !important;
-}
-.nav-top input[type="search"]::placeholder {
-  color: rgb(255 255 255 / 0.75) !important;
-}

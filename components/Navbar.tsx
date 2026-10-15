@@ -25,7 +25,7 @@ export default function Navbar() {
   const urlQuery = useSearchParams().get("q") ?? "";
   const [panel, setPanel] = useState<Panel>(null);
 
-  // False while the page is at the top, where the nav floats transparent over the hero.
+  // False while the page is at the top, where the bar is fully transparent.
   const [scrolled, setScrolled] = useState(false);
 
   // The input keeps its own text so typing never lags, and re-syncs when the URL changes
@@ -93,7 +93,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-300 motion-reduce:transition-none ${
+      className={`sticky top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-300 motion-reduce:transition-none ${
         solid
           ? "glass border-walnut/15 bg-background/50 backdrop-blur-xl backdrop-saturate-150 dark:border-white/10 dark:bg-zinc-950/50"
           : "border-transparent bg-transparent"
@@ -102,7 +102,7 @@ export default function Navbar() {
       {/* Mobile: burger left, brand centered, search right. Desktop: brand, links, search. */}
       <nav
         aria-label="Primary"
-        className={`${solid ? "" : "nav-top "}mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 md:h-14`}
+        className={`mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 md:h-14`}
       >
         <div className="col-start-1 row-start-1 flex justify-start md:hidden">
           <button
