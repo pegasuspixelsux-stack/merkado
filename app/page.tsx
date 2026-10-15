@@ -24,8 +24,10 @@ export default function Home() {
         <Navbar />
       </Suspense>
       <Suspense fallback={null}>
-        <CatalogView outro={<AboutUsSection />} />
+        <CatalogView />
       </Suspense>
+      {/* Full width, resting directly on the footer's top line. */}
+      <AboutUsSection />
       <Footer />
     </>
   );

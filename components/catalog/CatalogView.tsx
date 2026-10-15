@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MessageCircle, SearchX, X } from "lucide-react";
 import CategoryIcon from "@/components/CategoryIcon";
@@ -21,8 +21,7 @@ const pillOn =
   "border-chestnut bg-chestnut text-white dark:border-white dark:bg-white dark:text-black";
 
 // The search text lives in the URL (?q=), written by the top nav search. This view only reads it.
-// `outro` is rendered below the grid, above the footer (the collapsible About section).
-export default function CatalogView({ outro }: { outro?: ReactNode }) {
+export default function CatalogView() {
   const { items, hydrated } = usePastaInventory();
   const { config: heroConfig } = useHeroConfig();
   const query = useSearchParams().get("q") ?? "";
@@ -149,8 +148,6 @@ export default function CatalogView({ outro }: { outro?: ReactNode }) {
             ))}
           </ul>
         )}
-
-        {outro}
       </main>
 
       {/* Order bar: appears once anything has a quantity and sends the whole order in one message. */}

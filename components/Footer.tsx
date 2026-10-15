@@ -32,7 +32,7 @@ export default function Footer() {
   const { name, summary, hours, pickup, delivery, phone, email, social } = storeInfo;
 
   return (
-    <footer className="mt-10 border-t border-walnut/15 bg-walnut/[0.04] dark:border-white/10 dark:bg-white/[0.02]">
+    <footer className="border-t border-walnut/15 bg-walnut/[0.04] dark:border-white/10 dark:bg-white/[0.02]">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {/* 1. Brand and overview */}
