@@ -51,7 +51,7 @@ export default function AboutUsSection() {
           className="w-full text-left text-base font-medium text-walnut transition-colors hover:bg-walnut/5 dark:text-white dark:hover:bg-white/5"
         >
           <span className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
-            Learn more about our story
+            Conocé nuestra historia
             <ChevronDown
               className={`h-5 w-5 shrink-0 transition-transform duration-300 motion-reduce:transition-none ${open ? "rotate-180" : ""}`}
               aria-hidden="true"
@@ -81,7 +81,7 @@ export default function AboutUsSection() {
 
             <div>
               <h3 className="text-balance text-2xl font-semibold tracking-tight text-walnut md:text-3xl dark:text-white">
-                Artisanal Fresh Pasta Since {storeInfo.foundedYear}
+                Pasta artesanal fresca desde {storeInfo.foundedYear}
               </h3>
               <div className="mt-4 space-y-3 text-base leading-relaxed text-muted dark:text-zinc-400">
                 {storeInfo.about.paragraphs.map((p) => (

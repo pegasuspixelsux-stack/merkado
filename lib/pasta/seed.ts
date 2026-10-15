@@ -34,7 +34,7 @@ export const SEED_ITEMS: PastaItem[] = [
     title: "Ravioles de Verdura y Ricota",
     category: "pasta",
     description:
-      "Rellenos de acelga, espinaca y ricota fresca, con un punto de queso rallado y pimienta. La pasta es casera y no lleva conservantes, por eso conviene cocinarla en el día o freezarla. Combinan con salsa de tomate, crema de puerro o un simple hilo de aceite de oliva.",
+      "Rellenos de acelga, espinaca y ricota fresca, con un punto de queso rallado y pimienta. La pasta es casera y no lleva conservantes, por eso conviene cocinarla en el día o congelarla. Combinan con salsa de tomate, crema de puerro o un simple hilo de aceite de oliva.",
     price: 3900,
     unit: "12 unidades",
     imageUrl: unsplash("photo-1676832661871-994153cf2d93"),

@@ -29,7 +29,7 @@ export default function LoginForm() {
       await signIn(email.trim(), password);
       router.replace("/admin/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Sign-in failed. Try again.");
+      setError(err instanceof Error ? err.message : "No se pudo ingresar. Probá de nuevo.");
       setBusy(false);
     }
   }
@@ -37,16 +37,16 @@ export default function LoginForm() {
   return (
     <div className="w-full max-w-sm">
       <h1 className="text-3xl font-semibold tracking-tight text-walnut dark:text-white">
-        Admin sign in
+        Admin
       </h1>
       <p className="mt-2 text-sm text-muted dark:text-zinc-400">
-        Manage the catalog: add items, change prices and mark things sold out.
+        Administrá el catálogo: agregá productos, cambiá precios y marcá lo que se agotó.
       </p>
 
       <form onSubmit={submit} noValidate className="mt-8 space-y-5">
         <div>
           <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-walnut dark:text-zinc-200">
-            Email
+            Correo electrónico
           </label>
           <input
             id="email"
@@ -55,14 +55,14 @@ export default function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={input}
-            placeholder="you@example.com"
+            placeholder="vos@ejemplo.com"
             aria-invalid={!!error}
             aria-describedby={error ? "login-error" : undefined}
           />
         </div>
         <div>
           <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-walnut dark:text-zinc-200">
-            Password
+            Contraseña
           </label>
           <input
             id="password"
@@ -87,19 +87,19 @@ export default function LoginForm() {
           disabled={busy}
           className="w-full rounded-full bg-chestnut px-5 py-3 text-sm font-medium text-white transition-all hover:bg-chestnut-hover active:scale-[0.98] disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
         >
-          {busy ? "Signing in" : "Sign in"}
+          {busy ? "Ingresando" : "Ingresar"}
         </button>
       </form>
 
       <p className="mt-6 rounded-xl border border-walnut/15 px-4 py-3 text-xs leading-relaxed text-muted dark:border-white/10 dark:text-zinc-400">
-        Placeholder sign-in for local testing: any email and a password of 6 or more characters works. Firebase Auth replaces this, and it is not secure until then.
+        Ingreso de prueba para desarrollo local: sirve cualquier correo y una contraseña de 6 o más caracteres. Firebase Auth lo va a reemplazar y, hasta entonces, no es seguro.
       </p>
 
       <Link
         href="/"
         className="mt-6 inline-block text-sm text-muted transition-colors hover:text-walnut dark:text-zinc-400 dark:hover:text-white"
       >
-        Back to the catalog
+        Volver al catálogo
       </Link>
     </div>
   );

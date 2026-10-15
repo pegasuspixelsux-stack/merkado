@@ -75,21 +75,21 @@ export default function CatalogView() {
         {/* Visually hidden: announces result counts to screen readers. */}
         <p aria-live="polite" className="sr-only">
           {hydrated
-            ? `${visible.length} ${visible.length === 1 ? "item" : "items"}${
-                query.trim() ? ` for "${query.trim()}"` : ""
+            ? `${visible.length} ${visible.length === 1 ? "producto" : "productos"}${
+                query.trim() ? ` para "${query.trim()}"` : ""
               }`
-            : "Loading the catalog"}
+            : "Cargando el catálogo"}
         </p>
 
         {/* Category filters, above the grid. */}
-        <div role="group" aria-label="Filter by category" className="mb-8 flex flex-wrap gap-2">
+        <div role="group" aria-label="Filtrar por categoría" className="mb-8 flex flex-wrap gap-2">
           <button
             type="button"
             aria-pressed={category === "all"}
             onClick={() => setCategory("all")}
             className={`${pill} ${category === "all" ? pillOn : pillOff}`}
           >
-            All
+            Todos
           </button>
           {categories.map((c) => (
             <button
@@ -119,12 +119,12 @@ export default function CatalogView() {
           <div className="mx-auto flex max-w-sm flex-col items-center py-24 text-center">
             <SearchX className="h-8 w-8 text-zinc-400" strokeWidth={1.5} aria-hidden="true" />
             <h2 className="mt-4 text-lg font-semibold text-walnut dark:text-white">
-              {filtering ? "Nothing matches that search" : "The catalog is empty"}
+              {filtering ? "No hay resultados para esa búsqueda" : "El catálogo está vacío"}
             </h2>
             <p className="mt-2 text-sm text-muted dark:text-zinc-400">
               {filtering
-                ? "Try a different word or clear the filters."
-                : "Items added in the dashboard will show up here."}
+                ? "Probá con otra palabra o quitá los filtros."
+                : "Los productos que agregues en el panel van a aparecer acá."}
             </p>
             {filtering && (
               <button
@@ -132,7 +132,7 @@ export default function CatalogView() {
                 onClick={clearFilters}
                 className="mt-6 rounded-full bg-chestnut px-5 py-2 text-sm font-medium text-white hover:bg-chestnut-hover dark:bg-white dark:text-black dark:hover:bg-zinc-200"
               >
-                Clear filters
+                Quitar filtros
               </button>
             )}
           </div>
@@ -161,15 +161,15 @@ export default function CatalogView() {
               className="inline-flex items-center gap-2 rounded-full bg-chestnut px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-chestnut-hover active:scale-[0.97] dark:bg-white dark:text-black dark:hover:bg-zinc-200"
             >
               <MessageCircle className="h-4 w-4" aria-hidden="true" />
-              Order on WhatsApp
+              Pedir por WhatsApp
               <span className="tabular-nums opacity-70">
-                {orderCount} {orderCount === 1 ? "item" : "items"}, {formatPrice(orderTotal)}
+                {orderCount} {orderCount === 1 ? "producto" : "productos"}, {formatPrice(orderTotal)}
               </span>
             </a>
             <button
               type="button"
               onClick={() => setOrder({})}
-              aria-label="Clear order"
+              aria-label="Vaciar el pedido"
               className="grid h-10 w-10 place-items-center rounded-full text-muted transition-colors hover:bg-walnut/5 hover:text-walnut dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white"
             >
               <X className="h-4 w-4" aria-hidden="true" />

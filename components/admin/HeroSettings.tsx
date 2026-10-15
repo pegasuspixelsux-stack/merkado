@@ -22,7 +22,7 @@ const iconBtn =
   "grid h-9 w-9 place-items-center rounded-full text-muted transition-colors hover:bg-walnut/5 hover:text-walnut disabled:pointer-events-none disabled:opacity-30 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white";
 
 const STORAGE_FULL =
-  "Could not save. Browser storage may be full or blocked. Remove a slide, or add the image by link instead of uploading it.";
+  "No se pudo guardar. Puede que el almacenamiento del navegador esté lleno o bloqueado. Quitá una diapositiva o agregá la imagen por enlace en lugar de subirla.";
 
 // Always merge into the newest saved config, never a stale render's copy, so quick consecutive
 // edits (typing, then flipping a switch) cannot undo each other.
@@ -108,7 +108,7 @@ function OverlayPreview({ url, darkness, color, colorOpacity }: {
   colorOpacity: number;
 }) {
   return (
-    <div className="relative aspect-[16/7] w-full overflow-hidden rounded-xl bg-zinc-900" role="img" aria-label="Preview of the hero with the overlay applied">
+    <div className="relative aspect-[16/7] w-full overflow-hidden rounded-xl bg-zinc-900" role="img" aria-label="Vista previa de la portada con la capa aplicada">
       <PastaImage key={url} url={url} alt="" className="absolute inset-0 h-full w-full" />
       <div aria-hidden="true" className="absolute inset-0" style={{ backgroundColor: color, opacity: colorOpacity / 100 }} />
       <div aria-hidden="true" className="absolute inset-0 bg-black" style={{ opacity: darkness / 100 }} />
@@ -176,8 +176,8 @@ function DraftField({
 type Device = "desktop" | "mobile";
 const LIST_KEY = { desktop: "desktopSlides", mobile: "mobileSlides" } as const;
 const DEVICE_HELP: Record<Device, string> = {
-  desktop: "Shown on screens 768px wide and up. Wide photos work best.",
-  mobile: "Shown on phones. Square or portrait photos work best. If this set is empty, the desktop slides are used.",
+  desktop: "Se muestran en pantallas de 768 px o más. Funcionan mejor las fotos horizontales.",
+  mobile: "Se muestran en celulares. Funcionan mejor las fotos cuadradas o verticales. Si este grupo está vacío, se usan las diapositivas de escritorio.",
 };
 
 export default function HeroSettings() {
@@ -222,7 +222,7 @@ export default function HeroSettings() {
 
     const room = MAX_SLIDES - heroBackend.getSnapshot()[listKey].length;
     if (room <= 0) {
-      setError(`Each set holds up to ${MAX_SLIDES} slides. Remove one first.`);
+      setError(`Cada grupo admite hasta ${MAX_SLIDES} diapositivas. Quitá una primero.`);
       return;
     }
 
@@ -234,10 +234,10 @@ export default function HeroSettings() {
       try {
         added.push({ id: newId(), imageUrl: await fileToDataUrl(file, device === "mobile" ? 1200 : 1920), altText: "" });
       } catch (err) {
-        problems.push(err instanceof Error ? err.message : `${file.name} could not be added.`);
+        problems.push(err instanceof Error ? err.message : `No se pudo agregar ${file.name}.`);
       }
     }
-    if (files.length > room) problems.push(`Only ${room} more ${room === 1 ? "slide fits" : "slides fit"}, so the rest were skipped.`);
+    if (files.length > room) problems.push(`Solo ${room === 1 ? "cabe una diapositiva más" : "caben " + room + " diapositivas más"}, así que se omitió el resto.`);
 
     // One save for the whole batch, merged into the newest config.
     if (added.length) {
@@ -255,15 +255,15 @@ export default function HeroSettings() {
     e.preventDefault();
     const url = urlInput.trim();
     setUrlError("");
-    if (!isHttpUrl(url)) return setUrlError("Use a full link starting with https://");
+    if (!isHttpUrl(url)) return setUrlError("Usá un enlace completo que empiece con https://");
     if (heroBackend.getSnapshot()[listKey].length >= MAX_SLIDES)
-      return setUrlError(`Each set holds up to ${MAX_SLIDES} slides. Remove one first.`);
+      return setUrlError(`Cada grupo admite hasta ${MAX_SLIDES} diapositivas. Quitá una primero.`);
 
     setBusy(true);
     const ok = await probeImage(url);
     if (!ok) {
       setBusy(false);
-      return setUrlError("That link did not load as an image. Check it and try again.");
+      return setUrlError("Ese enlace no cargó como imagen. Revisalo y probá de nuevo.");
     }
     if (await run({ [listKey]: [...heroBackend.getSnapshot()[listKey], { id: newId(), imageUrl: url, altText: "" }] } as Partial<HeroConfig>)) {
       setUrlInput("");
@@ -294,9 +294,9 @@ export default function HeroSettings() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold tracking-tight text-walnut dark:text-white">Hero</h1>
+      <h1 className="text-3xl font-semibold tracking-tight text-walnut dark:text-white">Portada</h1>
       <p className="mt-2 text-sm text-muted dark:text-zinc-400">
-        The slideshow at the top of the catalog. Changes save automatically and show on the catalog right away.
+        El carrusel de arriba del catálogo. Los cambios se guardan solos y se ven enseguida en el catálogo.
       </p>
 
       {error && (
@@ -311,16 +311,16 @@ export default function HeroSettings() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 id={`${uid}-nav`} className="text-base font-semibold text-walnut dark:text-white">
-                Site name in the top bar
+                Nombre del sitio en la barra superior
               </h2>
               <p className="mt-1 text-sm text-muted dark:text-zinc-400">
-                Show the store name in the navigation bar. Turn it off if your hero artwork already carries the name.
+                Mostrá el nombre de la tienda en la barra de navegación. Apagalo si el arte de la portada ya lleva el nombre.
               </p>
             </div>
             <Switch
               checked={config.showNavTitle}
               onChange={(next) => void run({ showNavTitle: next })}
-              label="Show the site name in the top navigation bar"
+              label="Mostrar el nombre del sitio en la barra de navegación superior"
             />
           </div>
         </section>
@@ -330,38 +330,38 @@ export default function HeroSettings() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 id={`${uid}-text`} className="text-base font-semibold text-walnut dark:text-white">
-                Heading and text
+                Título y texto
               </h2>
               <p className="mt-1 text-sm text-muted dark:text-zinc-400">
-                Show a heading and supporting text over the slides. Turn it off for photos only.
+                Mostrá un título y un texto de apoyo sobre las diapositivas. Apagalo si querés solo fotos.
               </p>
             </div>
             <Switch
               checked={config.showTextOverlay}
               onChange={(next) => void run({ showTextOverlay: next })}
-              label="Show heading and supporting text on the hero"
+              label="Mostrar el título y el texto de apoyo en la portada"
             />
           </div>
 
           <div className="mt-5 space-y-4">
             <div>
-              <label htmlFor={`${uid}-heading`} className={label}>Heading</label>
+              <label htmlFor={`${uid}-heading`} className={label}>Título</label>
               <DraftField
                 id={`${uid}-heading`}
                 value={config.heading}
                 disabled={!config.showTextOverlay}
-                placeholder="Fresh Pasta Today"
+                placeholder="Pasta fresca de hoy"
                 onSave={(v) => void run({ heading: v })}
               />
             </div>
             <div>
-              <label htmlFor={`${uid}-subtext`} className={label}>Supporting text</label>
+              <label htmlFor={`${uid}-subtext`} className={label}>Texto de apoyo</label>
               <DraftField
                 id={`${uid}-subtext`}
                 multiline
                 value={config.subtext}
                 disabled={!config.showTextOverlay}
-                placeholder="A short line under the heading"
+                placeholder="Una línea corta debajo del título"
                 onSave={(v) => void run({ subtext: v })}
               />
             </div>
@@ -370,15 +370,15 @@ export default function HeroSettings() {
 
         {/* Slides */}
         <section className={card} aria-labelledby={`${uid}-slides`}>
-          <h2 id={`${uid}-slides`} className="text-base font-semibold text-walnut dark:text-white">Slides</h2>
+          <h2 id={`${uid}-slides`} className="text-base font-semibold text-walnut dark:text-white">Diapositivas</h2>
           <p className="mt-1 text-sm text-muted dark:text-zinc-400">
-            Desktop and phones each have their own set, so every photo can be cropped for its screen.
-            Upload photos or add them by link. Uploads are resized and kept in this browser.
+            Escritorio y celulares tienen cada uno su propio grupo, así cada foto se puede recortar para su pantalla.
+            Subí fotos o agregalas por enlace. Las fotos subidas se achican y se guardan en este navegador.
           </p>
 
           <div
             role="group"
-            aria-label="Which slides to edit"
+            aria-label="Qué diapositivas editar"
             className="mt-5 inline-flex rounded-full border border-walnut/15 bg-walnut/[0.05] p-0.5 dark:border-white/10 dark:bg-white/5"
           >
             {(["desktop", "mobile"] as const).map((d) => (
@@ -397,13 +397,13 @@ export default function HeroSettings() {
                     : "text-muted hover:text-walnut dark:text-zinc-400 dark:hover:text-white"
                 }`}
               >
-                {d === "desktop" ? "Desktop" : "Mobile"}{" "}
+                {d === "desktop" ? "Escritorio" : "Celular"}{" "}
                 <span className="tabular-nums opacity-70">({config[LIST_KEY[d]].length})</span>
               </button>
             ))}
           </div>
           <p className="mt-3 text-xs text-muted dark:text-zinc-400">
-            {DEVICE_HELP[device]} {slides.length} of {MAX_SLIDES} slides.
+            {DEVICE_HELP[device]} {slides.length} de {MAX_SLIDES} diapositivas.
           </p>
 
           <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start">
@@ -411,19 +411,19 @@ export default function HeroSettings() {
               <input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={onFiles} />
               <button type="button" onClick={() => fileRef.current?.click()} disabled={busy || full} className={ghostBtn}>
                 <ImagePlus className="h-4 w-4" aria-hidden="true" />
-                {busy ? "Working" : "Upload images"}
+                {busy ? "Procesando" : "Subir imágenes"}
               </button>
             </div>
 
             <form onSubmit={addUrl} noValidate className="min-w-0 flex-1">
               <div className="flex gap-2">
-                <label htmlFor={`${uid}-url`} className="sr-only">Image link</label>
+                <label htmlFor={`${uid}-url`} className="sr-only">Enlace de la imagen</label>
                 <input
                   id={`${uid}-url`}
                   type="url"
                   value={urlInput}
                   onChange={(e) => setUrlInput(e.target.value)}
-                  placeholder={full ? `Limit of ${MAX_SLIDES} slides reached` : "Paste an image link, https://"}
+                  placeholder={full ? `Se alcanzó el límite de ${MAX_SLIDES} diapositivas` : "Pegá un enlace de imagen, https://"}
                   disabled={full}
                   aria-invalid={!!urlError}
                   aria-describedby={urlError ? `${uid}-url-err` : undefined}
@@ -431,7 +431,7 @@ export default function HeroSettings() {
                 />
                 <button type="submit" disabled={busy || full || !urlInput.trim()} className={ghostBtn}>
                   <Link2 className="h-4 w-4" aria-hidden="true" />
-                  Add
+                  Agregar
                 </button>
               </div>
               {urlError && (
@@ -443,8 +443,8 @@ export default function HeroSettings() {
           {slides.length === 0 ? (
             <p className="mt-6 rounded-xl border border-dashed border-walnut/15 px-4 py-10 text-center text-sm text-muted dark:border-white/15 dark:text-zinc-400">
               {device === "mobile"
-                ? "No mobile slides, so phones show the desktop slides. Add some to give phones their own."
-                : "No desktop slides yet. Screens 768px and up use the mobile slides, or a plain background if there are none."}
+                ? "No hay diapositivas para celular, así que los celulares muestran las de escritorio. Agregá algunas para darles las suyas."
+                : "Todavía no hay diapositivas de escritorio. Las pantallas de 768 px o más usan las de celular, o un fondo liso si no hay ninguna."}
             </p>
           ) : (
             <ol className="mt-6 space-y-3">
@@ -457,20 +457,20 @@ export default function HeroSettings() {
                   <PastaImage key={slide.imageUrl} url={slide.imageUrl} alt="" className="h-16 w-28 shrink-0 rounded-lg" />
                   <div className="min-w-0 flex-1 basis-44">
                     <DraftField
-                      ariaLabel={`Description of slide ${i + 1} for screen readers`}
+                      ariaLabel={`Descripción de la diapositiva ${i + 1} para lectores de pantalla`}
                       value={slide.altText ?? ""}
-                      placeholder="Describe this photo (optional)"
+                      placeholder="Describí esta foto (opcional)"
                       onSave={(v) => setAlt(slide.id, v)}
                     />
                   </div>
                   <div className="flex items-center">
-                    <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label={`Move slide ${i + 1} up`} className={iconBtn}>
+                    <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label={`Subir la diapositiva ${i + 1}`} className={iconBtn}>
                       <ArrowUp className="h-4 w-4" aria-hidden="true" />
                     </button>
-                    <button type="button" onClick={() => move(i, 1)} disabled={i === slides.length - 1} aria-label={`Move slide ${i + 1} down`} className={iconBtn}>
+                    <button type="button" onClick={() => move(i, 1)} disabled={i === slides.length - 1} aria-label={`Bajar la diapositiva ${i + 1}`} className={iconBtn}>
                       <ArrowDown className="h-4 w-4" aria-hidden="true" />
                     </button>
-                    <button type="button" onClick={() => setRemoving(slide)} aria-label={`Delete slide ${i + 1}`} className={iconBtn}>
+                    <button type="button" onClick={() => setRemoving(slide)} aria-label={`Eliminar la diapositiva ${i + 1}`} className={iconBtn}>
                       <Trash2 className="h-4 w-4" aria-hidden="true" />
                     </button>
                   </div>
@@ -482,9 +482,9 @@ export default function HeroSettings() {
 
         {/* Overlay: darkness and colour */}
         <section className={card} aria-labelledby={`${uid}-overlay`}>
-          <h2 id={`${uid}-overlay`} className="text-base font-semibold text-walnut dark:text-white">Darkness and colour overlay</h2>
+          <h2 id={`${uid}-overlay`} className="text-base font-semibold text-walnut dark:text-white">Capa de oscuridad y color</h2>
           <p className="mt-1 text-sm text-muted dark:text-zinc-400">
-            Darken the slides, tint them with a colour, or both. Useful for readable text or to match your brand.
+            Oscurecé las diapositivas, teñilas con un color, o las dos cosas. Sirve para que el texto se lea bien o para combinar con tu marca.
           </p>
 
           <div className="mt-5">
@@ -499,7 +499,7 @@ export default function HeroSettings() {
           <div className="mt-6 grid gap-6 sm:grid-cols-2">
             <div>
               <label htmlFor={`${uid}-dark`} className={`${label} flex justify-between`}>
-                <span>Darkness</span>
+                <span>Oscuridad</span>
                 <span className="font-normal tabular-nums text-muted dark:text-zinc-400">{darkness.draft}%</span>
               </label>
               <input
@@ -512,15 +512,15 @@ export default function HeroSettings() {
                 onChange={(e) => darkness.change(Number(e.target.value))}
                 onPointerUp={darkness.flush}
                 onBlur={darkness.flush}
-                aria-valuetext={`${darkness.draft} percent`}
+                aria-valuetext={`${darkness.draft} por ciento`}
                 className="h-2 w-full cursor-pointer accent-chestnut dark:accent-white"
               />
             </div>
 
             <div>
-              <p className={label}>Colour overlay</p>
+              <p className={label}>Capa de color</p>
               <div className="flex items-center gap-3">
-                <label htmlFor={`${uid}-tint`} className="sr-only">Overlay colour</label>
+                <label htmlFor={`${uid}-tint`} className="sr-only">Color de la capa</label>
                 <input
                   id={`${uid}-tint`}
                   type="color"
@@ -532,7 +532,7 @@ export default function HeroSettings() {
                 <span className="text-sm tabular-nums text-muted dark:text-zinc-400">{tint.draft.toUpperCase()}</span>
               </div>
               <label htmlFor={`${uid}-tint-strength`} className="mt-4 flex justify-between text-sm text-walnut dark:text-zinc-200">
-                <span>Strength</span>
+                <span>Intensidad</span>
                 <span className="tabular-nums text-muted dark:text-zinc-400">{tintStrength.draft}%</span>
               </label>
               <input
@@ -545,7 +545,7 @@ export default function HeroSettings() {
                 onChange={(e) => tintStrength.change(Number(e.target.value))}
                 onPointerUp={tintStrength.flush}
                 onBlur={tintStrength.flush}
-                aria-valuetext={`${tintStrength.draft} percent`}
+                aria-valuetext={`${tintStrength.draft} por ciento`}
                 className="mt-1.5 h-2 w-full cursor-pointer accent-chestnut dark:accent-white"
               />
             </div>
@@ -560,7 +560,7 @@ export default function HeroSettings() {
               }}
               className={`${ghostBtn} mt-5`}
             >
-              Remove overlay
+              Quitar la capa
             </button>
           )}
         </section>
@@ -569,20 +569,20 @@ export default function HeroSettings() {
         <section className={card} aria-labelledby={`${uid}-auto`}>
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 id={`${uid}-auto`} className="text-base font-semibold text-walnut dark:text-white">Autoplay</h2>
+              <h2 id={`${uid}-auto`} className="text-base font-semibold text-walnut dark:text-white">Reproducción automática</h2>
               <p className="mt-1 text-sm text-muted dark:text-zinc-400">
-                Move to the next slide automatically. It pauses while a visitor hovers or focuses the hero, and never runs for people who prefer reduced motion.
+                Pasa a la siguiente diapositiva automáticamente. Se pausa mientras alguien pasa el mouse o enfoca la portada, y nunca corre para quienes prefieren menos movimiento.
               </p>
             </div>
             <Switch
               checked={config.enableAutoplay}
               onChange={(next) => void run({ enableAutoplay: next })}
-              label="Advance slides automatically"
+              label="Avanzar las diapositivas automáticamente"
             />
           </div>
 
           <div className="mt-5 max-w-xs">
-            <label htmlFor={`${uid}-interval`} className={label}>Time per slide</label>
+            <label htmlFor={`${uid}-interval`} className={label}>Tiempo por diapositiva</label>
             <select
               id={`${uid}-interval`}
               value={config.autoplayIntervalMs}
@@ -591,7 +591,7 @@ export default function HeroSettings() {
               className={input}
             >
               {intervals.map((ms) => (
-                <option key={ms} value={ms}>{ms / 1000} seconds</option>
+                <option key={ms} value={ms}>{ms / 1000} segundos</option>
               ))}
             </select>
           </div>
@@ -600,18 +600,18 @@ export default function HeroSettings() {
 
       <Modal open={removing !== null} onClose={() => setRemoving(null)} labelledBy="slide-delete-title">
         <div className="p-6 sm:p-8">
-          <h2 id="slide-delete-title" className="text-xl font-semibold tracking-tight">Delete this slide?</h2>
+          <h2 id="slide-delete-title" className="text-xl font-semibold tracking-tight">¿Eliminar esta diapositiva?</h2>
           <p className="mt-2 text-sm text-muted dark:text-zinc-400">
-            It leaves the hero right away. An uploaded image cannot be recovered, so you would need to upload it again.
+            Sale de la portada al instante. Una imagen subida no se puede recuperar, así que habría que subirla de nuevo.
           </p>
           <div className="mt-8 flex justify-end gap-3">
-            <button type="button" onClick={() => setRemoving(null)} className={ghostBtn}>Keep slide</button>
+            <button type="button" onClick={() => setRemoving(null)} className={ghostBtn}>Conservar diapositiva</button>
             <button
               type="button"
               onClick={confirmRemove}
               className="rounded-full bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-red-700 active:scale-[0.97]"
             >
-              Delete slide
+              Eliminar diapositiva
             </button>
           </div>
         </div>

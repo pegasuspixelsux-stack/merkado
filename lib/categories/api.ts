@@ -31,7 +31,7 @@ export async function updateCategory(
 ): Promise<Category> {
   const existing = categoryBackend.getSnapshot();
   const current = existing.find((c) => c.id === id);
-  if (!current) throw new Error("That category no longer exists.");
+  if (!current) throw new Error("Esa categoría ya no existe.");
 
   const patch: Partial<Category> = {};
   if (newDetails.name !== undefined) {

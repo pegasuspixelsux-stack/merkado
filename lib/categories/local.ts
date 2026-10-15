@@ -79,7 +79,7 @@ export const localCategoryBackend: CategoryBackend = {
   async update(id, patch) {
     const current = load();
     const found = current.find((c) => c.id === id);
-    if (!found) throw new Error("That category no longer exists.");
+    if (!found) throw new Error("Esa categoría ya no existe.");
     const updated: Category = { ...found, ...patch };
     // Clearing an optional field removes it instead of storing an empty string.
     if (!updated.description) delete updated.description;

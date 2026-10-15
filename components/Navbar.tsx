@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useHeroConfig } from "@/hooks/useHeroConfig";
+import OpenAboutLink from "@/components/OpenAboutLink";
+import { navLinks } from "@/config/navLinks";
 import { Menu, Search, X } from "lucide-react";
 
-const links = [
-  { label: "Home", href: "/" },
-  { label: "Catalog", href: "#catalog" },
-  { label: "Admin", href: "/admin/login" },
-];
+// The links are shared with the footer (config/navLinks.ts). "Sobre nosotros" also opens the About
+// band. The admin login lives in the footer.
+const links = navLinks;
 
 const iconBtn =
   "grid h-10 w-10 place-items-center rounded-full text-walnut transition-colors hover:bg-walnut/5 dark:text-zinc-300 dark:hover:bg-white/10";
@@ -83,8 +83,8 @@ export default function Navbar() {
         type="search"
         value={query}
         onChange={(e) => onType(e.target.value)}
-        placeholder="Search pasta, sauces, cheese"
-        aria-label="Search the catalog"
+        placeholder="Buscá pastas, salsas, quesos"
+        aria-label="Buscar en el catálogo"
         autoFocus={autoFocus}
         className={`${field} [&::-webkit-search-cancel-button]:appearance-none`}
       />
@@ -101,14 +101,14 @@ export default function Navbar() {
     >
       {/* Mobile: burger left, brand centered, search right. Desktop: brand, links, search. */}
       <nav
-        aria-label="Primary"
+        aria-label="Principal"
         className={`mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 md:h-14`}
       >
         <div className="col-start-1 row-start-1 flex justify-start md:hidden">
           <button
             type="button"
             onClick={() => setPanel((p) => (p === "menu" ? null : "menu"))}
-            aria-label={panel === "menu" ? "Close menu" : "Open menu"}
+            aria-label={panel === "menu" ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={panel === "menu"}
             aria-controls="mobile-menu"
             className={`${iconBtn} -ml-2`}
@@ -129,12 +129,18 @@ export default function Navbar() {
         <ul className="row-start-1 hidden items-center gap-8 md:col-start-2 md:flex">
           {links.map((l) => (
             <li key={l.href}>
-              <Link
-                href={l.href}
-                className="text-sm text-muted transition-colors hover:text-walnut dark:text-zinc-400 dark:hover:text-white"
-              >
-                {l.label}
-              </Link>
+              {l.opensAbout ? (
+                <OpenAboutLink className="text-sm text-muted transition-colors hover:text-walnut dark:text-zinc-400 dark:hover:text-white">
+                  {l.label}
+                </OpenAboutLink>
+              ) : (
+                <Link
+                  href={l.href}
+                  className="text-sm text-muted transition-colors hover:text-walnut dark:text-zinc-400 dark:hover:text-white"
+                >
+                  {l.label}
+                </Link>
+              )}
             </li>
           ))}
         </ul>
@@ -144,7 +150,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setPanel((p) => (p === "search" ? null : "search"))}
-            aria-label={panel === "search" ? "Close search" : "Open search"}
+            aria-label={panel === "search" ? "Cerrar búsqueda" : "Abrir búsqueda"}
             aria-expanded={panel === "search"}
             aria-controls="mobile-search"
             className={`${iconBtn} -mr-2 md:hidden`}
@@ -159,13 +165,22 @@ export default function Navbar() {
           <ul>
             {links.map((l) => (
               <li key={l.href}>
-                <Link
-                  href={l.href}
-                  onClick={() => setPanel(null)}
-                  className="block py-3 text-base text-walnut transition-colors hover:text-walnut dark:text-zinc-300 dark:hover:text-white"
-                >
-                  {l.label}
-                </Link>
+                {l.opensAbout ? (
+                  <OpenAboutLink
+                    onClick={() => setPanel(null)}
+                    className="block py-3 text-base text-walnut transition-colors hover:text-walnut dark:text-zinc-300 dark:hover:text-white"
+                  >
+                    {l.label}
+                  </OpenAboutLink>
+                ) : (
+                  <Link
+                    href={l.href}
+                    onClick={() => setPanel(null)}
+                    className="block py-3 text-base text-walnut transition-colors hover:text-walnut dark:text-zinc-300 dark:hover:text-white"
+                  >
+                    {l.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

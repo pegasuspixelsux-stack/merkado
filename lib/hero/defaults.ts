@@ -13,8 +13,8 @@ const ALT =
 
 export const DEFAULT_HERO_CONFIG: HeroConfig = {
   showTextOverlay: false,
-  heading: "Fresh Pasta Today",
-  subtext: "Rolled and filled by hand each morning. Pick what you need below and order on WhatsApp.",
+  heading: "Pasta fresca de hoy",
+  subtext: "Estiramos y rellenamos a mano cada mañana. Elegí lo que necesitás y pedí por WhatsApp.",
   desktopSlides: [
     { id: "hero-landscape", imageUrl: "/hero_images/pasta_landscape.jpg", altText: ALT },
   ],

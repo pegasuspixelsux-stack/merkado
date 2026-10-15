@@ -38,7 +38,7 @@ export default function ThemeToggle() {
   return (
     <div
       role="group"
-      aria-label="Color theme"
+      aria-label="Tema de color"
       className="inline-flex rounded-full border border-walnut/15 bg-walnut/[0.05] p-0.5 dark:border-white/10 dark:bg-white/5"
     >
       <button
@@ -48,7 +48,7 @@ export default function ThemeToggle() {
         className={`${base} bg-cream text-walnut shadow-sm dark:bg-transparent dark:text-zinc-500 dark:shadow-none dark:hover:text-zinc-200`}
       >
         <Sun className="h-3.5 w-3.5" aria-hidden="true" />
-        Light
+        Claro
       </button>
       <button
         type="button"
@@ -57,7 +57,7 @@ export default function ThemeToggle() {
         className={`${base} text-muted hover:text-walnut dark:bg-white/10 dark:text-white dark:hover:text-white`}
       >
         <Moon className="h-3.5 w-3.5" aria-hidden="true" />
-        Dark
+        Oscuro
       </button>
     </div>
   );

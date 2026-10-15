@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LoginForm from "@/components/admin/LoginForm";
 
 export const metadata: Metadata = {
-  title: "Admin sign in | Merkado",
+  title: "Admin | Merkado",
   robots: { index: false, follow: false },
 };
 

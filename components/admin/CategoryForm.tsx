@@ -31,7 +31,7 @@ export default function CategoryForm({
     try {
       await onSave(name, { description, icon });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not save. Try again.");
+      setError(err instanceof Error ? err.message : "No se pudo guardar. Probá de nuevo.");
       setSaving(false);
     }
   }
@@ -41,12 +41,12 @@ export default function CategoryForm({
   return (
     <form onSubmit={submit} noValidate className="p-6 sm:p-8">
       <h2 id="category-dialog-title" className="text-xl font-semibold tracking-tight">
-        {category ? "Edit category" : "Add new category"}
+        {category ? "Editar categoría" : "Agregar categoría nueva"}
       </h2>
 
       <div className="mt-6 space-y-5">
         <div>
-          <label htmlFor="c-name" className={label}>Name</label>
+          <label htmlFor="c-name" className={label}>Nombre</label>
           <input
             id="c-name"
             value={name}
@@ -59,13 +59,13 @@ export default function CategoryForm({
             autoFocus
           />
           <p id="c-slug" className="mt-1.5 text-xs text-muted dark:text-zinc-400">
-            Slug: <span className="font-medium tabular-nums">{slug || "generated from the name"}</span>
+            Slug: <span className="font-medium tabular-nums">{slug || "se genera a partir del nombre"}</span>
           </p>
         </div>
 
         <div>
           <label htmlFor="c-description" className={label}>
-            Description <span className="font-normal text-muted dark:text-zinc-500">(optional)</span>
+            Descripción <span className="font-normal text-muted dark:text-zinc-500">(opcional)</span>
           </label>
           <textarea
             id="c-description"
@@ -74,13 +74,13 @@ export default function CategoryForm({
             maxLength={MAX_DESCRIPTION_LENGTH}
             rows={2}
             className={`${input} resize-y`}
-            placeholder="Wines to pair with our pastas"
+            placeholder="Vinos para acompañar nuestras pastas"
           />
         </div>
 
         <div>
           <label htmlFor="c-icon" className={label}>
-            Icon or image link <span className="font-normal text-muted dark:text-zinc-500">(optional)</span>
+            Ícono o enlace de imagen <span className="font-normal text-muted dark:text-zinc-500">(opcional)</span>
           </label>
           <input
             id="c-icon"
@@ -105,14 +105,14 @@ export default function CategoryForm({
           onClick={onCancel}
           className="rounded-full border border-walnut/15 px-5 py-2.5 text-sm font-medium text-walnut transition-colors hover:border-walnut/30 dark:border-white/10 dark:text-zinc-300 dark:hover:border-white/25"
         >
-          Cancel
+          Cancelar
         </button>
         <button
           type="submit"
           disabled={saving}
           className="rounded-full bg-chestnut px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-chestnut-hover active:scale-[0.97] disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
         >
-          {category ? "Save changes" : "Add category"}
+          {category ? "Guardar cambios" : "Agregar categoría"}
         </button>
       </div>
     </form>

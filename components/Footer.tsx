@@ -4,6 +4,7 @@ import { siFacebook, siInstagram, siWhatsapp } from "simple-icons";
 import { addressLine, storeInfo } from "@/config/storeInfo";
 import { whatsappLink } from "@/lib/format";
 import OpenAboutLink from "@/components/OpenAboutLink";
+import { navLinks } from "@/config/navLinks";
 import ThemeToggle from "@/components/ThemeToggle";
 
 // Brand marks come from the simple-icons package, drawn in the current text colour.
@@ -40,15 +41,15 @@ export default function Footer() {
             <p className="text-xl font-bold tracking-tight text-walnut dark:text-white">{name}</p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted dark:text-zinc-400">{summary}</p>
             <div className="mt-5 flex items-center gap-2">
-              <Brand icon={siInstagram} label={`${name} on Instagram`} href={social.instagram} />
-              <Brand icon={siFacebook} label={`${name} on Facebook`} href={social.facebook} />
-              <Brand icon={siWhatsapp} label={`Order from ${name} on WhatsApp`} href={whatsappLink("Hola!")} />
+              <Brand icon={siInstagram} label={`${name} en Instagram`} href={social.instagram} />
+              <Brand icon={siFacebook} label={`${name} en Facebook`} href={social.facebook} />
+              <Brand icon={siWhatsapp} label={`Pedile a ${name} por WhatsApp`} href={whatsappLink("Hola!")} />
             </div>
           </div>
 
           {/* 2. Business hours */}
           <div id="hours">
-            <h2 className={heading}>Business hours</h2>
+            <h2 className={heading}>Horarios</h2>
             <ul className="mt-4 space-y-3">
               {hours.map((h) => (
                 <li key={h.days} className={row}>
@@ -60,10 +61,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-            <ul className="mt-4 flex flex-wrap gap-2" aria-label="Ways to get your order">
+            <ul className="mt-4 flex flex-wrap gap-2" aria-label="Formas de recibir tu pedido">
               {[
-                { label: "Pickup", on: pickup },
-                { label: "Delivery", on: delivery },
+                { label: "Retiro en el local", on: pickup },
+                { label: "Envío a domicilio", on: delivery },
               ].map((s) => (
                 <li
                   key={s.label}
@@ -71,15 +72,15 @@ export default function Footer() {
                 >
                   <Check className="h-3.5 w-3.5" aria-hidden="true" />
                   {s.label}
-                  <span className="sr-only">{s.on ? " available" : " not available"}</span>
+                  <span className="sr-only">{s.on ? " disponible" : " no disponible"}</span>
                 </li>
               ))}
             </ul>
           </div>
 
           {/* 3. Contact and location */}
-          <div>
-            <h2 className={heading}>Contact and location</h2>
+          <div id="contact">
+            <h2 className={heading}>Contacto y ubicación</h2>
             <ul className="mt-4 space-y-3">
               <li className={row}>
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
@@ -92,7 +93,7 @@ export default function Footer() {
               <li className={row}>
                 <MessageCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                 <a href={whatsappLink("Hola! Quiero hacer un pedido.")} target="_blank" rel="noopener noreferrer" className={linkCls}>
-                  Order on WhatsApp
+                  Pedir por WhatsApp
                 </a>
               </li>
               <li className={row}>
@@ -103,15 +104,21 @@ export default function Footer() {
           </div>
 
           {/* 4. Quick links and admin */}
-          <nav aria-label="Footer">
-            <h2 className={heading}>Quick links</h2>
+          <nav aria-label="Pie de página">
+            <h2 className={heading}>Enlaces rápidos</h2>
             <ul className="mt-4 space-y-3">
-              <li><Link href="/#catalog" className={linkCls}>Menu and catalog</Link></li>
-              <li><OpenAboutLink className={linkCls}>About us</OpenAboutLink></li>
-              <li><Link href="/#hours" className={linkCls}>Delivery info</Link></li>
+              {navLinks.map((l) => (
+                <li key={l.href}>
+                  {l.opensAbout ? (
+                    <OpenAboutLink className={linkCls}>{l.label}</OpenAboutLink>
+                  ) : (
+                    <Link href={l.href} className={linkCls}>{l.label}</Link>
+                  )}
+                </li>
+              ))}
               <li>
                 <Link href="/admin/login" className="text-xs text-muted/80 transition-colors hover:text-walnut dark:text-zinc-500 dark:hover:text-white">
-                  Admin login
+                  Admin
                 </Link>
               </li>
             </ul>
@@ -122,7 +129,7 @@ export default function Footer() {
         <hr className="mt-12 border-walnut/15 dark:border-white/10" />
         <div className="mt-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <p className="text-xs text-muted dark:text-zinc-500">
-            &copy; {storeInfo.copyrightYear} {name}. All rights reserved.
+            &copy; {storeInfo.copyrightYear} {name}. Todos los derechos reservados.
           </p>
           <ThemeToggle />
         </div>

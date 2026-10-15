@@ -18,11 +18,11 @@ const key = (name: string) => slugify(name);
 
 export function validateName(name: string, existing: Category[], ignoreId?: string): string {
   const clean = name.trim().replace(/\s+/g, " ");
-  if (!clean) throw new Error("Enter a name for the category.");
-  if (clean.length > MAX_NAME_LENGTH) throw new Error(`Keep the name to ${MAX_NAME_LENGTH} characters or fewer.`);
-  if (!slugify(clean)) throw new Error("Use at least one letter or number in the name.");
+  if (!clean) throw new Error("Ingresá un nombre para la categoría.");
+  if (clean.length > MAX_NAME_LENGTH) throw new Error(`Usá un nombre de hasta ${MAX_NAME_LENGTH} caracteres.`);
+  if (!slugify(clean)) throw new Error("Usá al menos una letra o un número en el nombre.");
   if (existing.some((c) => c.id !== ignoreId && key(c.name) === key(clean)))
-    throw new Error(`There is already a category called "${clean}".`);
+    throw new Error(`Ya hay una categoría llamada "${clean}".`);
   return clean;
 }
 
@@ -40,7 +40,7 @@ export function validateDescription(description: string | undefined): string | u
   const clean = description?.trim();
   if (!clean) return undefined;
   if (clean.length > MAX_DESCRIPTION_LENGTH)
-    throw new Error(`Keep the description to ${MAX_DESCRIPTION_LENGTH} characters or fewer.`);
+    throw new Error(`Usá una descripción de hasta ${MAX_DESCRIPTION_LENGTH} caracteres.`);
   return clean;
 }
 
@@ -55,5 +55,5 @@ export function validateIcon(icon: string | undefined): string | undefined {
   } catch {
     // falls through to the error below
   }
-  throw new Error("Use a full link starting with https://, or a path starting with /");
+  throw new Error("Usá un enlace completo que empiece con https://, o una ruta que empiece con /");
 }

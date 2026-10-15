@@ -1,6 +1,6 @@
-const priceFormat = new Intl.NumberFormat("es-AR", {
+const priceFormat = new Intl.NumberFormat("es-UY", {
   style: "currency",
-  currency: "ARS",
+  currency: "UYU",
   maximumFractionDigits: 0,
 });
 

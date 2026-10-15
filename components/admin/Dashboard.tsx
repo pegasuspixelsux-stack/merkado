@@ -21,9 +21,9 @@ import Switch from "./Switch";
 type Editing = PastaItem | "new" | null;
 type Tab = "inventory" | "categories" | "hero";
 const TABS: { id: Tab; label: string }[] = [
-  { id: "inventory", label: "Inventory" },
-  { id: "categories", label: "Categories" },
-  { id: "hero", label: "Hero" },
+  { id: "inventory", label: "Inventario" },
+  { id: "categories", label: "Categorías" },
+  { id: "hero", label: "Portada" },
 ];
 
 const ghostBtn =
@@ -80,18 +80,18 @@ export default function Dashboard() {
       <header className="glass sticky top-0 z-40 border-b border-walnut/15 bg-background/70 backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/70">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-6">
           <p className="text-lg font-bold tracking-tight text-walnut dark:text-white">
-            Merkado <span className="font-normal text-muted dark:text-zinc-500">Admin</span>
+            Merkado <span className="font-normal text-muted dark:text-zinc-500">Panel</span>
           </p>
           <div className="flex items-center gap-1">
             <Link href="/" className={`${iconBtn} w-auto gap-1.5 px-3 text-sm`}>
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">View catalog</span>
-              <span className="sr-only sm:hidden">View catalog</span>
+              <span className="hidden sm:inline">Ver el catálogo</span>
+              <span className="sr-only sm:hidden">Ver el catálogo</span>
             </Link>
             <button type="button" onClick={logout} className={`${iconBtn} w-auto gap-1.5 px-3 text-sm`}>
               <LogOut className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">Sign out</span>
-              <span className="sr-only sm:hidden">Sign out</span>
+              <span className="hidden sm:inline">Salir</span>
+              <span className="sr-only sm:hidden">Salir</span>
             </button>
           </div>
         </div>
@@ -100,7 +100,7 @@ export default function Dashboard() {
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
         <div
           role="tablist"
-          aria-label="Dashboard sections"
+          aria-label="Secciones del panel"
           className="mb-8 inline-flex rounded-full border border-walnut/15 bg-walnut/[0.05] p-0.5 dark:border-white/10 dark:bg-white/5"
         >
           {TABS.map(({ id: t, label }) => (
@@ -133,10 +133,10 @@ export default function Dashboard() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold tracking-tight text-walnut dark:text-white">
-              Inventory
+              Inventario
             </h1>
             <p className="mt-2 text-sm text-muted dark:text-zinc-400">
-              {items.length} {items.length === 1 ? "item" : "items"}, {soldOut} sold out
+              {items.length} {items.length === 1 ? "producto" : "productos"}, {soldOut} {soldOut === 1 ? "agotado" : "agotados"}
             </p>
           </div>
           <button
@@ -145,19 +145,19 @@ export default function Dashboard() {
             className="inline-flex items-center gap-1.5 rounded-full bg-chestnut px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-chestnut-hover active:scale-[0.97] dark:bg-white dark:text-black dark:hover:bg-zinc-200"
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
-            Add item
+            Agregar producto
           </button>
         </div>
 
         {items.length === 0 ? (
           <div className="mt-10 rounded-3xl border border-dashed border-walnut/15 px-6 py-20 text-center dark:border-white/15">
-            <h2 className="text-lg font-semibold text-walnut dark:text-white">No items yet</h2>
+            <h2 className="text-lg font-semibold text-walnut dark:text-white">Todavía no hay productos</h2>
             <p className="mt-2 text-sm text-muted dark:text-zinc-400">
-              Add your first item and it appears in the catalog right away.
+              Agregá tu primer producto y aparece al instante en el catálogo.
             </p>
             <button type="button" onClick={() => setEditing("new")} className={`${ghostBtn} mt-6`}>
               <Plus className="h-4 w-4" aria-hidden="true" />
-              Add item
+              Agregar producto
             </button>
           </div>
         ) : (
@@ -186,12 +186,12 @@ export default function Dashboard() {
                       item.available ? "text-muted dark:text-zinc-400" : "text-walnut dark:text-white"
                     }`}
                   >
-                    {item.available ? "In stock" : "Sold out"}
+                    {item.available ? "En stock" : "Agotado"}
                   </span>
                   <Switch
                     checked={item.available}
                     onChange={(next) => update(item.id, { available: next })}
-                    label={`${item.title} available to order`}
+                    label={`${item.title} disponible para pedir`}
                   />
                 </div>
 
@@ -200,7 +200,7 @@ export default function Dashboard() {
                     type="button"
                     onClick={() => setEditing(item)}
                     className={iconBtn}
-                    aria-label={`Edit ${item.title}`}
+                    aria-label={`Editar ${item.title}`}
                   >
                     <Pencil className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -208,7 +208,7 @@ export default function Dashboard() {
                     type="button"
                     onClick={() => setDeleting(item)}
                     className={iconBtn}
-                    aria-label={`Delete ${item.title}`}
+                    aria-label={`Eliminar ${item.title}`}
                   >
                     <Trash2 className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -224,7 +224,7 @@ export default function Dashboard() {
 
       <footer className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-8">
         <p className="text-xs text-muted dark:text-zinc-500">
-          Saved in this browser. Connect Firebase to share it across devices.
+          Se guarda en este navegador. Conectá Firebase para compartirlo entre dispositivos.
         </p>
         <ThemeToggle />
       </footer>
@@ -241,21 +241,21 @@ export default function Dashboard() {
       <Modal open={deleting !== null} onClose={() => setDeleting(null)} labelledBy="delete-dialog-title">
         <div className="p-6 sm:p-8">
           <h2 id="delete-dialog-title" className="text-xl font-semibold tracking-tight">
-            Delete {deleting?.title}?
+            ¿Eliminar {deleting?.title}?
           </h2>
           <p className="mt-2 text-sm text-muted dark:text-zinc-400">
-            It disappears from the catalog right away. This cannot be undone.
+            Desaparece del catálogo al instante. No se puede deshacer.
           </p>
           <div className="mt-8 flex justify-end gap-3">
             <button type="button" onClick={() => setDeleting(null)} className={ghostBtn}>
-              Keep item
+              Conservar producto
             </button>
             <button
               type="button"
               onClick={confirmDelete}
               className="rounded-full bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-red-700 active:scale-[0.97]"
             >
-              Delete item
+              Eliminar producto
             </button>
           </div>
         </div>

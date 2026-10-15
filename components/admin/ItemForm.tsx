@@ -49,10 +49,10 @@ export default function ItemForm({
     e.preventDefault();
     const next: Errors = {};
     const priceNum = Number(price);
-    if (!title.trim()) next.title = "Enter a name for this item.";
-    if (price === "" || !Number.isFinite(priceNum) || priceNum <= 0) next.price = "Enter a price above 0.";
-    if (!unit.trim()) next.unit = "Enter a unit, such as 500g or kg.";
-    if (imageUrl.trim() && !isHttpUrl(imageUrl.trim())) next.imageUrl = "Use a full link starting with https://";
+    if (!title.trim()) next.title = "Ingresá un nombre para este producto.";
+    if (price === "" || !Number.isFinite(priceNum) || priceNum <= 0) next.price = "Ingresá un precio mayor a 0.";
+    if (!unit.trim()) next.unit = "Ingresá una unidad, por ejemplo 500g o kg.";
+    if (imageUrl.trim() && !isHttpUrl(imageUrl.trim())) next.imageUrl = "Usá un enlace completo que empiece con https://";
     setErrors(next);
     if (Object.keys(next).length) return;
 
@@ -71,12 +71,12 @@ export default function ItemForm({
   return (
     <form onSubmit={submit} noValidate className="p-6 sm:p-8">
       <h2 id="item-dialog-title" className="text-xl font-semibold tracking-tight">
-        {item ? "Edit item" : "Add item"}
+        {item ? "Editar producto" : "Agregar producto"}
       </h2>
 
       <div className="mt-6 space-y-5">
         <div>
-          <label htmlFor="f-title" className={label}>Title</label>
+          <label htmlFor="f-title" className={label}>Nombre</label>
           <input
             id="f-title"
             value={title}
@@ -91,14 +91,14 @@ export default function ItemForm({
         </div>
 
         <div>
-          <label htmlFor="f-category" className={label}>Category</label>
+          <label htmlFor="f-category" className={label}>Categoría</label>
           <select
             id="f-category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className={input}
           >
-            <option value="">Uncategorized</option>
+            <option value="">Sin categoría</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
@@ -106,20 +106,20 @@ export default function ItemForm({
         </div>
 
         <div>
-          <label htmlFor="f-description" className={label}>Description</label>
+          <label htmlFor="f-description" className={label}>Descripción</label>
           <textarea
             id="f-description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
             className={`${input} resize-y`}
-            placeholder="Ingredients and a short note"
+            placeholder="Ingredientes y una breve nota"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="f-price" className={label}>Price (ARS)</label>
+            <label htmlFor="f-price" className={label}>Precio (UYU)</label>
             <input
               id="f-price"
               type="number"
@@ -136,7 +136,7 @@ export default function ItemForm({
             {errors.price && <p id="f-price-err" className={errorText}>{errors.price}</p>}
           </div>
           <div>
-            <label htmlFor="f-unit" className={label}>Unit</label>
+            <label htmlFor="f-unit" className={label}>Unidad</label>
             <input
               id="f-unit"
               list="unit-options"
@@ -150,7 +150,7 @@ export default function ItemForm({
             <datalist id="unit-options">
               <option value="500g" />
               <option value="kg" />
-              <option value="unit" />
+              <option value="unidad" />
               <option value="12 unidades" />
             </datalist>
             {errors.unit && <p id="f-unit-err" className={errorText}>{errors.unit}</p>}
@@ -158,7 +158,7 @@ export default function ItemForm({
         </div>
 
         <div>
-          <label htmlFor="f-image" className={label}>Image URL</label>
+          <label htmlFor="f-image" className={label}>Enlace de la imagen</label>
           <input
             id="f-image"
             type="url"
@@ -173,7 +173,7 @@ export default function ItemForm({
             <p id="f-image-err" className={errorText}>{errors.imageUrl}</p>
           ) : (
             <p id="f-image-help" className="mt-1.5 text-xs text-muted dark:text-zinc-400">
-              Optional. Leave empty to show a placeholder.
+              Opcional. Si lo dejás vacío, se muestra una imagen genérica.
             </p>
           )}
         </div>
@@ -181,13 +181,13 @@ export default function ItemForm({
         <div className="flex items-center justify-between gap-4 rounded-xl border border-walnut/15 px-4 py-3 dark:border-white/10">
           <div>
             <p className="text-sm font-medium text-walnut dark:text-zinc-200">
-              {available ? "In stock" : "Sold out"}
+              {available ? "En stock" : "Agotado"}
             </p>
             <p className="text-xs text-muted dark:text-zinc-400">
-              Sold out items stay visible but cannot be ordered.
+              Los productos agotados siguen visibles, pero no se pueden pedir.
             </p>
           </div>
-          <Switch checked={available} onChange={setAvailable} label="Available to order" />
+          <Switch checked={available} onChange={setAvailable} label="Disponible para pedir" />
         </div>
       </div>
 
@@ -197,14 +197,14 @@ export default function ItemForm({
           onClick={onCancel}
           className="rounded-full border border-walnut/15 px-5 py-2.5 text-sm font-medium text-walnut transition-colors hover:border-walnut/30 dark:border-white/10 dark:text-zinc-300 dark:hover:border-white/25"
         >
-          Cancel
+          Cancelar
         </button>
         <button
           type="submit"
           disabled={saving}
           className="rounded-full bg-chestnut px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-chestnut-hover active:scale-[0.97] disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
         >
-          {item ? "Save changes" : "Add item"}
+          {item ? "Guardar cambios" : "Agregar producto"}
         </button>
       </div>
     </form>

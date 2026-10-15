@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { categoryBackend } from "@/lib/categories";
 
-export const UNCATEGORIZED = "Uncategorized";
+export const UNCATEGORIZED = "Sin categoría";
 
 export function useCategories() {
   const categories = useSyncExternalStore(

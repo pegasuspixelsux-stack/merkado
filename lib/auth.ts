@@ -34,12 +34,12 @@ function subscribe(onChange: () => void) {
 }
 
 export async function signIn(email: string, password: string): Promise<void> {
-  if (!/^\S+@\S+\.\S+$/.test(email)) throw new Error("Enter a valid email address.");
-  if (password.length < 6) throw new Error("Password must be at least 6 characters.");
+  if (!/^\S+@\S+\.\S+$/.test(email)) throw new Error("Ingresá un correo electrónico válido.");
+  if (password.length < 6) throw new Error("La contraseña debe tener al menos 6 caracteres.");
   try {
     window.localStorage.setItem(KEY, email);
   } catch {
-    throw new Error("This browser is blocking storage, so sign-in cannot be saved.");
+    throw new Error("Este navegador está bloqueando el almacenamiento, así que no se puede guardar el ingreso.");
   }
   emit();
 }

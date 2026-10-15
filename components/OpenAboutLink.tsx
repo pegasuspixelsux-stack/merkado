@@ -8,14 +8,19 @@ export const OPEN_ABOUT_EVENT = "merkado:open-about";
 export default function OpenAboutLink({
   className,
   children,
+  onClick,
 }: {
   className?: string;
   children: React.ReactNode;
+  onClick?: () => void; // e.g. close a menu this link sits in
 }) {
   return (
     <a
       href="#about"
-      onClick={() => window.dispatchEvent(new Event(OPEN_ABOUT_EVENT))}
+      onClick={() => {
+        window.dispatchEvent(new Event(OPEN_ABOUT_EVENT));
+        onClick?.();
+      }}
       className={className}
     >
       {children}

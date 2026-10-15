@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Merkado",
   description:
-    "Fresh pasta, sauces and cheese. Search the catalog, filter by category and order by WhatsApp.",
+    "Pasta fresca, salsas y quesos. Buscá en el catálogo, filtrá por categoría y pedí por WhatsApp.",
 };
 
 export const viewport: Viewport = {
@@ -31,7 +31,7 @@ const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!==
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="es-UY"
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning

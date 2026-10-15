@@ -51,8 +51,8 @@ function SlideImage({ slide, active, index, count, first }: {
   return (
     <div
       role="group"
-      aria-roledescription="slide"
-      aria-label={`${index + 1} of ${count}`}
+      aria-roledescription="diapositiva"
+      aria-label={`${index + 1} de ${count}`}
       aria-hidden={!active}
       className={`absolute inset-0 transition-opacity duration-700 ease-in-out motion-reduce:transition-none ${
         active ? "opacity-100" : "opacity-0"
@@ -122,7 +122,7 @@ export default function HeroSlideshow({ config }: { config: HeroConfig }) {
 
   return (
     <section
-      aria-roledescription="carousel"
+      aria-roledescription="carrusel"
       aria-labelledby="hero-title"
       onPointerEnter={(e) => e.pointerType === "mouse" && setEngaged(true)}
       onPointerLeave={(e) => e.pointerType === "mouse" && setEngaged(false)}
@@ -194,16 +194,16 @@ export default function HeroSlideshow({ config }: { config: HeroConfig }) {
       ) : (
         // Text is off, but the page still needs a heading for screen readers and search engines.
         <h1 id="hero-title" className="sr-only">
-          {heading || "Merkado catalog"}
+          {heading || "Catálogo de Merkado"}
         </h1>
       )}
 
       {count > 1 && (
         <>
-          <button type="button" onClick={() => go(current - 1)} aria-label="Previous slide" className={`${arrowBtn} left-3 sm:left-5`}>
+          <button type="button" onClick={() => go(current - 1)} aria-label="Diapositiva anterior" className={`${arrowBtn} left-3 sm:left-5`}>
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
-          <button type="button" onClick={() => go(current + 1)} aria-label="Next slide" className={`${arrowBtn} right-3 sm:right-5`}>
+          <button type="button" onClick={() => go(current + 1)} aria-label="Diapositiva siguiente" className={`${arrowBtn} right-3 sm:right-5`}>
             <ChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>
 
@@ -214,7 +214,7 @@ export default function HeroSlideshow({ config }: { config: HeroConfig }) {
                   key={slide.id}
                   type="button"
                   onClick={() => go(i)}
-                  aria-label={`Go to slide ${i + 1}`}
+                  aria-label={`Ir a la diapositiva ${i + 1}`}
                   aria-current={i === current ? "true" : undefined}
                   className="grid h-7 w-6 place-items-center"
                 >
@@ -232,7 +232,7 @@ export default function HeroSlideshow({ config }: { config: HeroConfig }) {
             <button
               type="button"
               onClick={() => setUserPaused((p) => !p)}
-              aria-label={userPaused ? "Play slideshow" : "Pause slideshow"}
+              aria-label={userPaused ? "Reanudar la presentación" : "Pausar la presentación"}
               className="absolute bottom-3 right-3 grid h-9 w-9 place-items-center rounded-full bg-black/30 text-white backdrop-blur-md transition-colors hover:bg-black/50 sm:bottom-5 sm:right-5"
             >
               {userPaused ? <Play className="h-4 w-4" aria-hidden="true" /> : <Pause className="h-4 w-4" aria-hidden="true" />}

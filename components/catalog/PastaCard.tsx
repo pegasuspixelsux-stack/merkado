@@ -35,7 +35,7 @@ export default function PastaCard({
         />
         {soldOut && (
           <span className="absolute left-2 top-2 rounded-full bg-chestnut px-2.5 py-1 text-xs font-medium text-white sm:left-3 sm:top-3 dark:bg-white dark:text-black">
-            Sold out
+            Agotado
           </span>
         )}
       </div>
@@ -57,18 +57,18 @@ export default function PastaCard({
           <div className="mt-auto flex items-end justify-between gap-2 sm:gap-3">
             <div>
               <p id={`qty-${item.id}`} className="mb-1 hidden text-xs text-muted sm:block dark:text-zinc-400">
-                Quantity
+                Cantidad
               </p>
               <div
                 role="group"
-                aria-label={`Quantity of ${item.title}`}
+                aria-label={`Cantidad de ${item.title}`}
                 className="inline-flex items-center rounded-full border border-walnut/15 p-0.5 dark:border-white/10"
               >
                 <button
                   type="button"
                   onClick={() => onQuantityChange(quantity - 1)}
                   disabled={soldOut || quantity <= 0}
-                  aria-label={`Remove one ${item.title}`}
+                  aria-label={`Quitar una unidad de ${item.title}`}
                   className={stepBtn}
                 >
                   <Minus className="h-4 w-4" aria-hidden="true" />
@@ -83,7 +83,7 @@ export default function PastaCard({
                   type="button"
                   onClick={() => onQuantityChange(quantity + 1)}
                   disabled={soldOut || quantity >= MAX_QUANTITY}
-                  aria-label={`Add one ${item.title}`}
+                  aria-label={`Agregar una unidad de ${item.title}`}
                   className={stepBtn}
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />
@@ -92,7 +92,7 @@ export default function PastaCard({
             </div>
 
             <div className="min-w-0 text-right">
-              <p className="mb-1 hidden text-xs text-muted sm:block dark:text-zinc-400">Price</p>
+              <p className="mb-1 hidden text-xs text-muted sm:block dark:text-zinc-400">Precio</p>
               <p className="text-base font-semibold leading-tight tracking-tight text-walnut sm:text-lg dark:text-white">
                 {formatPrice(item.price)}
               </p>

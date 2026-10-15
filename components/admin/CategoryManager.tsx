@@ -42,7 +42,7 @@ export default function CategoryManager() {
     try {
       await deleteCategory(deleting.id);
     } catch {
-      setError("Could not delete the category. Browser storage may be blocked. Try again.");
+      setError("No se pudo eliminar la categoría. Puede que el almacenamiento del navegador esté bloqueado. Probá de nuevo.");
     }
     setDeleting(null);
   }
@@ -53,15 +53,15 @@ export default function CategoryManager() {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-walnut dark:text-white">Categories</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-walnut dark:text-white">Categorías</h1>
           <p className="mt-2 text-sm text-muted dark:text-zinc-400">
-            {categories.length} {categories.length === 1 ? "category" : "categories"}. They become the filters on the
-            catalog, and renaming one updates it everywhere.
+            {categories.length} {categories.length === 1 ? "categoría" : "categorías"}. Son los filtros del catálogo y, si
+            renombrás una, se actualiza en todos lados.
           </p>
         </div>
         <button type="button" onClick={() => setEditing("new")} className={primaryBtn}>
           <Plus className="h-4 w-4" aria-hidden="true" />
-          Add new category
+          Agregar categoría nueva
         </button>
       </div>
 
@@ -73,13 +73,13 @@ export default function CategoryManager() {
 
       {categories.length === 0 ? (
         <div className="mt-10 rounded-[14px] border border-dashed border-walnut/15 px-6 py-20 text-center dark:border-white/15">
-          <h2 className="text-lg font-semibold text-walnut dark:text-white">No categories yet</h2>
+          <h2 className="text-lg font-semibold text-walnut dark:text-white">Todavía no hay categorías</h2>
           <p className="mt-2 text-sm text-muted dark:text-zinc-400">
-            Add one and it appears as a filter on the catalog. Products without a category show under All.
+            Agregá una y aparece como filtro en el catálogo. Los productos sin categoría se ven en Todos.
           </p>
           <button type="button" onClick={() => setEditing("new")} className={`${ghostBtn} mt-6`}>
             <Plus className="h-4 w-4" aria-hidden="true" />
-            Add new category
+            Agregar categoría nueva
           </button>
         </div>
       ) : (
@@ -98,16 +98,16 @@ export default function CategoryManager() {
                   <p className="truncate font-medium text-walnut dark:text-white">{c.name}</p>
                   <p className="mt-0.5 truncate text-sm text-muted dark:text-zinc-400">
                     {c.description ? `${c.description} · ` : ""}
-                    {n} {n === 1 ? "product" : "products"}
+                    {n} {n === 1 ? "producto" : "productos"}
                     <span className="text-muted/70 dark:text-zinc-500"> · /{c.slug}</span>
                   </p>
                 </div>
 
                 <div className="flex items-center">
-                  <button type="button" onClick={() => setEditing(c)} className={iconBtn} aria-label={`Edit ${c.name}`}>
+                  <button type="button" onClick={() => setEditing(c)} className={iconBtn} aria-label={`Editar ${c.name}`}>
                     <Pencil className="h-4 w-4" aria-hidden="true" />
                   </button>
-                  <button type="button" onClick={() => setDeleting(c)} className={iconBtn} aria-label={`Delete ${c.name}`}>
+                  <button type="button" onClick={() => setDeleting(c)} className={iconBtn} aria-label={`Eliminar ${c.name}`}>
                     <Trash2 className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </div>
@@ -129,24 +129,24 @@ export default function CategoryManager() {
       <Modal open={deleting !== null} onClose={() => setDeleting(null)} labelledBy="category-delete-title">
         <div className="p-6 sm:p-8">
           <h2 id="category-delete-title" className="text-xl font-semibold tracking-tight">
-            Delete {deleting?.name}?
+            ¿Eliminar {deleting?.name}?
           </h2>
           <p className="mt-2 text-sm text-muted dark:text-zinc-400">
             {deletingCount > 0
-              ? `${deletingCount} ${deletingCount === 1 ? "product is" : "products are"} in this category. ${
-                  deletingCount === 1 ? "It stays" : "They stay"
-                } in the catalog and ${deletingCount === 1 ? "becomes" : "become"} uncategorized.`
-              : "No products use this category."}{" "}
-            The category itself cannot be recovered.
+              ? `${deletingCount} ${deletingCount === 1 ? "producto está" : "productos están"} en esta categoría. ${
+                  deletingCount === 1 ? "Sigue" : "Siguen"
+                } en el catálogo y ${deletingCount === 1 ? "queda" : "quedan"} sin categoría.`
+              : "Ningún producto usa esta categoría."}{" "}
+            La categoría en sí no se puede recuperar.
           </p>
           <div className="mt-8 flex justify-end gap-3">
-            <button type="button" onClick={() => setDeleting(null)} className={ghostBtn}>Keep category</button>
+            <button type="button" onClick={() => setDeleting(null)} className={ghostBtn}>Conservar categoría</button>
             <button
               type="button"
               onClick={confirmDelete}
               className="rounded-full bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-red-700 active:scale-[0.97]"
             >
-              Delete category
+              Eliminar categoría
             </button>
           </div>
         </div>
